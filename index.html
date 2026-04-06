@@ -1,0 +1,2964 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EcoSmart AI – Smart Sustainability Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ============================================================
+   ECOSMART AI — DESIGN SYSTEM & VARIABLES
+   ============================================================ */
+:root {
+  --eco-green: #00e896;
+  --eco-teal: #00c4b0;
+  --eco-lime: #a8ff3e;
+  --eco-blue: #0ea5e9;
+  --eco-amber: #f59e0b;
+  --eco-red: #ef4444;
+  --eco-purple: #8b5cf6;
+
+  --bg-primary: #080c10;
+  --bg-secondary: #0d1117;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.06);
+  --bg-glass: rgba(0,232,150,0.05);
+
+  --border: rgba(255,255,255,0.07);
+  --border-green: rgba(0,232,150,0.3);
+
+  --text-primary: #f0fdf4;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+
+  --shadow-green: 0 0 40px rgba(0,232,150,0.15);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  --transition-slow: all 0.6s cubic-bezier(0.4,0,0.2,1);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --nav-height: 72px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8fffe;
+  --bg-secondary: #f0fdf4;
+  --bg-card: rgba(0,0,0,0.03);
+  --bg-card-hover: rgba(0,0,0,0.06);
+  --bg-glass: rgba(0,200,130,0.07);
+  --border: rgba(0,0,0,0.07);
+  --border-green: rgba(0,180,110,0.3);
+  --text-primary: #0a1628;
+  --text-secondary: #374151;
+  --text-muted: #9ca3af;
+  --shadow-green: 0 0 40px rgba(0,200,130,0.12);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+/* ============================================================ RESET */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  font-family:var(--font-body);
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background 0.4s ease, color 0.4s ease;
+}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:var(--font-body);border:none;outline:none;}
+img{max-width:100%;display:block;}
+ul{list-style:none;}
+
+/* ============================================================ SCROLLBAR */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg-secondary);}
+::-webkit-scrollbar-thumb{background:var(--eco-green);border-radius:3px;}
+
+/* ============================================================ NOISE TEXTURE OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ============================================================ GRID BG */
+.grid-bg{
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,232,150,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,232,150,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;z-index:0;
+}
+[data-theme="light"] .grid-bg{
+  background-image:
+    linear-gradient(rgba(0,150,100,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,150,100,0.05) 1px, transparent 1px);
+}
+
+/* ============================================================ NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:var(--nav-height);
+  display:flex;align-items:center;
+  padding:0 2rem;
+  background:rgba(8,12,16,0.7);
+  backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  transition:var(--transition-slow);
+}
+[data-theme="light"] .navbar{background:rgba(248,255,254,0.75);}
+.navbar.scrolled{
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+.nav-brand{
+  display:flex;align-items:center;gap:0.75rem;
+  font-family:var(--font-display);font-weight:800;font-size:1.25rem;
+  letter-spacing:-0.02em;
+}
+.nav-brand .brand-icon{
+  width:36px;height:36px;
+  background:linear-gradient(135deg, var(--eco-green), var(--eco-teal));
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  box-shadow:0 0 20px rgba(0,232,150,0.4);
+  animation:pulse-brand 3s ease-in-out infinite;
+}
+@keyframes pulse-brand{
+  0%,100%{box-shadow:0 0 20px rgba(0,232,150,0.4);}
+  50%{box-shadow:0 0 35px rgba(0,232,150,0.7);}
+}
+.nav-brand span{
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-links{
+  display:flex;align-items:center;gap:0.25rem;
+  margin-left:auto;margin-right:2rem;
+}
+.nav-link{
+  padding:0.5rem 0.85rem;
+  border-radius:var(--radius-sm);
+  font-size:0.875rem;font-weight:500;
+  color:var(--text-secondary);
+  transition:var(--transition);
+  position:relative;
+  cursor:pointer;
+}
+.nav-link:hover,.nav-link.active{
+  color:var(--eco-green);
+  background:rgba(0,232,150,0.08);
+}
+.nav-link.active::after{
+  content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+  width:20px;height:2px;background:var(--eco-green);border-radius:2px;
+}
+.nav-actions{display:flex;align-items:center;gap:0.75rem;}
+.theme-toggle{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg-card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;transition:var(--transition);
+  color:var(--text-secondary);
+}
+.theme-toggle:hover{
+  background:rgba(0,232,150,0.1);border-color:var(--border-green);
+  color:var(--eco-green);transform:rotate(20deg);
+}
+.btn-nav-cta{
+  padding:0.5rem 1.25rem;border-radius:50px;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  color:#080c10;font-weight:600;font-size:0.875rem;
+  transition:var(--transition);
+  box-shadow:0 0 20px rgba(0,232,150,0.3);
+}
+.btn-nav-cta:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 35px rgba(0,232,150,0.5);
+}
+.hamburger{
+  display:none;flex-direction:column;gap:5px;padding:8px;
+  background:none;
+}
+.hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--text-primary);border-radius:2px;
+  transition:var(--transition);
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* MOBILE NAV */
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-height);left:0;right:0;z-index:999;
+  background:rgba(8,12,16,0.95);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  padding:1rem;
+  transform:translateY(-100%);opacity:0;
+  transition:var(--transition);
+}
+[data-theme="light"] .mobile-nav{background:rgba(248,255,254,0.97);}
+.mobile-nav.open{transform:translateY(0);opacity:1;}
+.mobile-nav-link{
+  display:block;padding:0.75rem 1rem;border-radius:var(--radius-sm);
+  color:var(--text-secondary);font-weight:500;
+  transition:var(--transition);cursor:pointer;
+}
+.mobile-nav-link:hover,.mobile-nav-link.active{
+  color:var(--eco-green);background:rgba(0,232,150,0.08);
+}
+
+/* ============================================================ PAGE SYSTEM */
+.page{display:none;min-height:100vh;padding-top:var(--nav-height);}
+.page.active{display:block;animation:pageIn 0.4s cubic-bezier(0.4,0,0.2,1);}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================ LAYOUT */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+.section{padding:5rem 0;}
+.section-sm{padding:3rem 0;}
+
+/* ============================================================ TYPOGRAPHY */
+.heading-xl{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2.5rem,6vw,4.5rem);
+  line-height:1.05;letter-spacing:-0.03em;
+}
+.heading-lg{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.8rem,4vw,3rem);
+  line-height:1.1;letter-spacing:-0.02em;
+}
+.heading-md{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.25rem,2.5vw,1.75rem);
+  line-height:1.2;letter-spacing:-0.01em;
+}
+.text-gradient{
+  background:linear-gradient(135deg,var(--eco-green) 0%,var(--eco-teal) 50%,var(--eco-lime) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.text-muted{color:var(--text-secondary);}
+.label{
+  font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--eco-green);
+}
+
+/* ============================================================ BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.75rem 1.75rem;border-radius:50px;
+  font-weight:600;font-size:0.9rem;
+  transition:var(--transition);position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.1);
+  transform:translateX(-100%);transition:transform 0.3s ease;
+}
+.btn:hover::before{transform:translateX(0);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  color:#080c10;
+  box-shadow:0 0 30px rgba(0,232,150,0.3);
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 0 50px rgba(0,232,150,0.5);
+}
+.btn-secondary{
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-primary);
+}
+.btn-secondary:hover{
+  border-color:var(--border-green);color:var(--eco-green);
+  background:rgba(0,232,150,0.05);
+  transform:translateY(-2px);
+}
+.btn-ghost{
+  background:transparent;color:var(--eco-green);
+  border:1px solid var(--border-green);
+}
+.btn-ghost:hover{background:rgba(0,232,150,0.08);transform:translateY(-2px);}
+.btn-sm{padding:0.5rem 1.25rem;font-size:0.8rem;}
+.btn-lg{padding:1rem 2.5rem;font-size:1rem;}
+
+/* ============================================================ CARDS */
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+  transition:var(--transition);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,232,150,0.03),transparent);
+  opacity:0;transition:var(--transition);
+}
+.card:hover{
+  border-color:var(--border-green);
+  background:var(--bg-card-hover);
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-green),var(--shadow-card);
+}
+.card:hover::before{opacity:1;}
+.card-glass{
+  background:var(--bg-glass);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border-green);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+}
+
+/* ============================================================ BADGES */
+.badge{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  padding:0.3rem 0.8rem;border-radius:50px;
+  font-size:0.75rem;font-weight:600;
+}
+.badge-green{background:rgba(0,232,150,0.12);color:var(--eco-green);border:1px solid rgba(0,232,150,0.2);}
+.badge-amber{background:rgba(245,158,11,0.12);color:var(--eco-amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-red{background:rgba(239,68,68,0.12);color:var(--eco-red);border:1px solid rgba(239,68,68,0.2);}
+.badge-blue{background:rgba(14,165,233,0.12);color:var(--eco-blue);border:1px solid rgba(14,165,233,0.2);}
+.badge-purple{background:rgba(139,92,246,0.12);color:var(--eco-purple);border:1px solid rgba(139,92,246,0.2);}
+
+/* ============================================================ PROGRESS BAR */
+.progress-bar{
+  height:8px;background:var(--bg-card);border-radius:50px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;border-radius:50px;
+  background:linear-gradient(90deg,var(--eco-green),var(--eco-teal));
+  transition:width 1.5s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 10px rgba(0,232,150,0.5);
+}
+
+/* ============================================================ GRID HELPERS */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+.flex{display:flex;}
+.flex-center{display:flex;align-items:center;justify-content:center;}
+.flex-between{display:flex;align-items:center;justify-content:space-between;}
+.flex-col{display:flex;flex-direction:column;}
+.gap-1{gap:0.5rem;}.gap-2{gap:1rem;}.gap-3{gap:1.5rem;}.gap-4{gap:2rem;}
+
+/* ============================================================ DIVIDER */
+.divider{height:1px;background:var(--border);margin:2rem 0;}
+
+/* ============================================================ INPUTS */
+.input-group{display:flex;flex-direction:column;gap:0.5rem;}
+.input-label{font-size:0.85rem;font-weight:500;color:var(--text-secondary);}
+.input{
+  width:100%;padding:0.75rem 1rem;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text-primary);font-family:var(--font-body);font-size:0.9rem;
+  transition:var(--transition);
+}
+.input:focus{
+  outline:none;border-color:var(--eco-green);
+  box-shadow:0 0 0 3px rgba(0,232,150,0.1);
+}
+.input::placeholder{color:var(--text-muted);}
+select.input{cursor:pointer;}
+input[type="range"]{
+  -webkit-appearance:none;width:100%;height:6px;
+  background:var(--bg-card);border-radius:3px;
+  outline:none;border:none;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;
+  background:var(--eco-green);border-radius:50%;cursor:pointer;
+  box-shadow:0 0 10px rgba(0,232,150,0.5);
+}
+
+/* ============================================================ TOAST */
+.toast-container{
+  position:fixed;bottom:2rem;right:2rem;z-index:9999;
+  display:flex;flex-direction:column;gap:0.75rem;
+}
+.toast{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.875rem 1.25rem;min-width:280px;max-width:380px;
+  background:var(--bg-secondary);border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  animation:toastIn 0.4s cubic-bezier(0.4,0,0.2,1);
+  backdrop-filter:blur(20px);
+}
+.toast.success{border-left:3px solid var(--eco-green);}
+.toast.error{border-left:3px solid var(--eco-red);}
+.toast.info{border-left:3px solid var(--eco-blue);}
+.toast.warning{border-left:3px solid var(--eco-amber);}
+.toast-icon{font-size:1.2rem;}
+.toast-msg{font-size:0.875rem;font-weight:500;color:var(--text-primary);}
+.toast-close{margin-left:auto;color:var(--text-muted);cursor:pointer;font-size:1.1rem;transition:var(--transition);}
+.toast-close:hover{color:var(--text-primary);}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px);}to{opacity:1;transform:translateX(0);}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(60px);}}
+
+/* ============================================================ MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.modal{
+  background:var(--bg-secondary);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:2rem;
+  max-width:520px;width:100%;
+  animation:modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.85);}to{opacity:1;transform:scale(1);}}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg-card);color:var(--text-secondary);
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);font-size:1.1rem;
+}
+.modal-close:hover{background:rgba(239,68,68,0.1);color:var(--eco-red);}
+
+/* ============================================================ SKELETON LOADER */
+.skeleton{
+  background:linear-gradient(90deg,var(--bg-card) 25%,var(--bg-card-hover) 50%,var(--bg-card) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+  border-radius:var(--radius-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* ============================================================ SCROLL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(0.9);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+
+/* ============================================================ ORBS (AMBIENT LIGHT) */
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);
+  pointer-events:none;z-index:0;
+}
+.orb-green{background:rgba(0,232,150,0.12);}
+.orb-teal{background:rgba(0,196,176,0.1);}
+.orb-blue{background:rgba(14,165,233,0.08);}
+
+/* ======================================================== PAGE 1: HOME */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,232,150,0.07) 0%,transparent 70%);
+}
+.hero-content{position:relative;z-index:1;max-width:900px;padding:0 2rem;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.4rem 1rem;border-radius:50px;
+  background:rgba(0,232,150,0.1);border:1px solid rgba(0,232,150,0.25);
+  font-size:0.8rem;font-weight:600;color:var(--eco-green);
+  margin-bottom:2rem;
+  animation:slideDown 0.6s ease;
+}
+.hero-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--eco-green);box-shadow:0 0 8px var(--eco-green);
+  animation:blink 1.5s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+.hero h1{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(3rem,8vw,6rem);
+  line-height:1;letter-spacing:-0.04em;
+  margin-bottom:1.5rem;
+}
+.hero-sub{
+  font-size:clamp(1rem,2vw,1.25rem);
+  color:var(--text-secondary);
+  max-width:600px;margin:0 auto 2.5rem;
+  line-height:1.6;
+}
+.hero-actions{
+  display:flex;align-items:center;justify-content:center;gap:1rem;
+  flex-wrap:wrap;margin-bottom:4rem;
+}
+.hero-stats{
+  display:flex;align-items:center;justify-content:center;gap:3rem;
+  flex-wrap:wrap;
+}
+.hero-stat{text-align:center;}
+.hero-stat-num{
+  font-family:var(--font-display);font-weight:800;font-size:2rem;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-stat-label{font-size:0.8rem;color:var(--text-muted);}
+
+/* FLOATING PARTICLES */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.particle{
+  position:absolute;width:4px;height:4px;border-radius:50%;
+  background:var(--eco-green);opacity:0.4;
+  animation:float-particle linear infinite;
+}
+@keyframes float-particle{
+  0%{transform:translateY(100vh) translateX(0);opacity:0;}
+  10%{opacity:0.4;}
+  90%{opacity:0.4;}
+  100%{transform:translateY(-10vh) translateX(var(--drift));opacity:0;}
+}
+
+/* FEATURES SECTION */
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.5rem;
+}
+.feature-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:2rem;
+  transition:var(--transition);position:relative;overflow:hidden;
+}
+.feature-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--eco-green),var(--eco-teal));
+  transform:scaleX(0);transform-origin:left;transition:var(--transition);
+}
+.feature-card:hover{
+  border-color:var(--border-green);
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-green);
+}
+.feature-card:hover::after{transform:scaleX(1);}
+.feature-icon{
+  width:52px;height:52px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin-bottom:1.25rem;
+  background:rgba(0,232,150,0.1);
+  border:1px solid rgba(0,232,150,0.2);
+  transition:var(--transition);
+}
+.feature-card:hover .feature-icon{
+  background:rgba(0,232,150,0.2);
+  transform:scale(1.1) rotate(5deg);
+}
+
+/* HOW IT WORKS */
+.steps-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:2rem;position:relative;
+}
+.step{text-align:center;position:relative;}
+.step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:1.25rem;
+  color:#080c10;margin:0 auto 1.25rem;
+  box-shadow:0 0 30px rgba(0,232,150,0.4);
+  position:relative;z-index:1;
+}
+
+/* TESTIMONIALS */
+.testimonials-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.5rem;
+}
+.testimonial{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.75rem;
+  transition:var(--transition);
+}
+.testimonial:hover{border-color:var(--border-green);transform:translateY(-4px);}
+.testimonial-text{
+  font-size:0.95rem;line-height:1.7;color:var(--text-secondary);
+  margin-bottom:1.25rem;font-style:italic;
+}
+.testimonial-author{display:flex;align-items:center;gap:0.75rem;}
+.author-avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  color:#080c10;font-weight:700;font-size:0.9rem;
+}
+.author-name{font-weight:600;font-size:0.9rem;}
+.author-role{font-size:0.78rem;color:var(--text-muted);}
+
+/* ======================================================== PAGE 2: DASHBOARD */
+.dash-header{
+  padding:2.5rem 0 1.5rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:2rem;
+}
+.dash-greeting{
+  font-family:var(--font-display);font-weight:800;font-size:2rem;
+  margin-bottom:0.25rem;
+}
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1.25rem;margin-bottom:2rem;
+}
+.stat-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  transition:var(--transition);position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle,var(--accent-color,rgba(0,232,150,0.15)),transparent 70%);
+}
+.stat-card:hover{border-color:var(--border-green);transform:translateY(-3px);}
+.stat-icon{font-size:1.75rem;margin-bottom:0.75rem;}
+.stat-value{
+  font-family:var(--font-display);font-weight:800;font-size:2rem;
+  line-height:1;margin-bottom:0.25rem;
+}
+.stat-label{font-size:0.8rem;color:var(--text-secondary);}
+.stat-change{
+  font-size:0.75rem;font-weight:600;margin-top:0.5rem;
+}
+.stat-change.up{color:var(--eco-green);}
+.stat-change.down{color:var(--eco-red);}
+
+.chart-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+}
+.chart-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.chart-title{font-family:var(--font-display);font-weight:700;font-size:1.1rem;}
+.chart-tabs{display:flex;gap:0.5rem;}
+.chart-tab{
+  padding:0.35rem 0.85rem;border-radius:50px;font-size:0.78rem;font-weight:600;
+  color:var(--text-secondary);background:none;border:1px solid transparent;
+  transition:var(--transition);cursor:pointer;
+}
+.chart-tab.active{
+  color:var(--eco-green);background:rgba(0,232,150,0.1);
+  border-color:rgba(0,232,150,0.2);
+}
+
+.eco-score-ring{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+}
+.ring-svg{width:180px;height:180px;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:10;}
+.ring-fill{
+  fill:none;stroke:url(#ringGradient);stroke-width:10;
+  stroke-linecap:round;
+  stroke-dasharray:502;
+  stroke-dashoffset:502;
+  transition:stroke-dashoffset 2s cubic-bezier(0.4,0,0.2,1);
+}
+.ring-text{
+  position:absolute;text-align:center;
+}
+.ring-num{
+  font-family:var(--font-display);font-weight:800;font-size:2.5rem;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.ring-label{font-size:0.8rem;color:var(--text-secondary);}
+
+/* ACTIVITY FEED */
+.activity-item{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem 0;border-bottom:1px solid var(--border);
+}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--eco-green);flex-shrink:0;margin-top:5px;
+  box-shadow:0 0 8px var(--eco-green);
+}
+.activity-text{font-size:0.875rem;color:var(--text-secondary);}
+.activity-time{font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;}
+
+/* ======================================================== PAGE 3: CARBON CALC */
+.calc-layout{
+  display:grid;grid-template-columns:1fr 1fr;gap:2rem;
+  align-items:start;
+}
+.calc-form{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:2rem;
+}
+.calc-section-title{
+  font-family:var(--font-display);font-weight:700;font-size:1rem;
+  color:var(--eco-green);margin-bottom:1.25rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.calc-result{
+  position:sticky;top:calc(var(--nav-height) + 1.5rem);
+}
+.result-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:2rem;text-align:center;
+  margin-bottom:1.5rem;
+}
+.result-co2{
+  font-family:var(--font-display);font-weight:800;
+  font-size:3.5rem;line-height:1;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.score-meter{
+  width:100%;height:20px;border-radius:50px;
+  background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e);
+  position:relative;margin:1.5rem 0;overflow:hidden;
+}
+.score-needle{
+  position:absolute;top:50%;transform:translateY(-50%) translateX(-50%);
+  width:24px;height:24px;background:white;border-radius:50%;
+  box-shadow:0 0 15px rgba(0,0,0,0.5),0 0 0 3px var(--eco-green);
+  transition:left 1.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.breakdown-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.75rem 1rem;border-radius:var(--radius-sm);
+  background:var(--bg-card);border:1px solid var(--border);
+  margin-bottom:0.5rem;transition:var(--transition);
+}
+.breakdown-item:hover{border-color:var(--border-green);}
+.breakdown-label{display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;}
+.breakdown-value{font-weight:700;font-size:0.9rem;color:var(--eco-green);}
+
+/* ======================================================== PAGE 4: AI INSIGHTS */
+.ai-chat-layout{
+  display:grid;grid-template-columns:1fr 360px;gap:2rem;
+  align-items:start;
+}
+.ai-messages{
+  display:flex;flex-direction:column;gap:1.25rem;
+  max-height:70vh;overflow-y:auto;padding-right:0.5rem;
+}
+.ai-message{
+  display:flex;gap:1rem;align-items:flex-start;
+  animation:msgIn 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.ai-avatar{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.ai-avatar.bot{
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+}
+.ai-avatar.user{background:var(--bg-card);border:1px solid var(--border);}
+.ai-bubble{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);border-top-left-radius:4px;
+  padding:1rem 1.25rem;max-width:80%;
+}
+.ai-bubble.user-msg{
+  background:rgba(0,232,150,0.08);border-color:rgba(0,232,150,0.2);
+  border-radius:var(--radius);border-top-right-radius:4px;
+}
+.ai-bubble p{font-size:0.9rem;line-height:1.6;color:var(--text-secondary);}
+.ai-bubble strong{color:var(--text-primary);}
+.user-message{flex-direction:row-reverse;}
+.ai-input-area{
+  display:flex;gap:0.75rem;align-items:flex-end;
+  padding:1.25rem;background:var(--bg-card);
+  border:1px solid var(--border);border-radius:var(--radius-lg);
+  margin-top:1rem;
+}
+.ai-input{
+  flex:1;background:none;border:none;color:var(--text-primary);
+  font-family:var(--font-body);font-size:0.9rem;
+  resize:none;outline:none;max-height:120px;
+}
+.ai-send-btn{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  color:#080c10;font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);
+}
+.ai-send-btn:hover{transform:scale(1.1);box-shadow:0 0 20px rgba(0,232,150,0.4);}
+
+.ai-typing{display:flex;gap:4px;align-items:center;padding:0.5rem;}
+.typing-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--eco-green);
+  animation:typing 1.4s ease infinite;
+}
+.typing-dot:nth-child(2){animation-delay:0.2s;}
+.typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes typing{0%,80%,100%{transform:scale(0.7);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+
+.insight-cards{display:flex;flex-direction:column;gap:1rem;}
+.insight-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem;
+  transition:var(--transition);cursor:pointer;
+}
+.insight-card:hover{border-color:var(--border-green);transform:translateX(-4px);}
+.insight-title{font-weight:600;font-size:0.875rem;margin-bottom:0.25rem;}
+.insight-desc{font-size:0.78rem;color:var(--text-muted);}
+.insight-icon{font-size:1.5rem;margin-bottom:0.75rem;}
+
+/* ======================================================== PAGE 5: AIR QUALITY */
+.aqi-hero{
+  text-align:center;padding:3rem 0;position:relative;
+}
+.aqi-circle{
+  width:220px;height:220px;border-radius:50%;
+  border:4px solid var(--aqi-color,var(--eco-green));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:2rem auto;
+  box-shadow:0 0 60px var(--aqi-glow,rgba(0,232,150,0.3));
+  position:relative;transition:all 1s ease;
+  background:radial-gradient(circle,var(--aqi-bg,rgba(0,232,150,0.05)),transparent);
+}
+.aqi-num{
+  font-family:var(--font-display);font-weight:800;font-size:4rem;
+  color:var(--aqi-color,var(--eco-green));transition:color 0.5s;
+}
+.aqi-label{font-size:0.85rem;color:var(--text-secondary);}
+.aqi-status{
+  font-family:var(--font-display);font-weight:700;font-size:1.5rem;
+  color:var(--aqi-color,var(--eco-green));
+}
+.aqi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;
+}
+.pollutant-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem;text-align:center;
+  transition:var(--transition);
+}
+.pollutant-card:hover{border-color:var(--border-green);}
+.pollutant-name{font-size:0.75rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;}
+.pollutant-value{font-family:var(--font-display);font-weight:700;font-size:1.5rem;color:var(--eco-green);}
+.pollutant-unit{font-size:0.75rem;color:var(--text-muted);}
+.location-search{
+  display:flex;gap:0.75rem;max-width:400px;margin:0 auto 2rem;
+}
+.health-tips{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:1rem;margin-top:2rem;
+}
+
+/* ======================================================== PAGE 6: CHALLENGES */
+.challenges-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:2rem;flex-wrap:wrap;gap:1rem;
+}
+.points-display{
+  display:flex;align-items:center;gap:0.75rem;
+  background:rgba(0,232,150,0.1);border:1px solid rgba(0,232,150,0.2);
+  padding:0.75rem 1.25rem;border-radius:50px;
+}
+.points-num{
+  font-family:var(--font-display);font-weight:800;font-size:1.5rem;
+  color:var(--eco-green);
+}
+.level-bar{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  margin-bottom:2rem;
+}
+.level-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.level-name{font-family:var(--font-display);font-weight:700;font-size:1.2rem;}
+.challenge-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.25rem;
+}
+.challenge-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  transition:var(--transition);position:relative;overflow:hidden;
+}
+.challenge-card.completed{
+  border-color:rgba(0,232,150,0.3);
+  background:rgba(0,232,150,0.03);
+}
+.challenge-card.completed::after{
+  content:'✓';position:absolute;top:1rem;right:1rem;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--eco-green);color:#080c10;
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+  font-size:0.85rem;line-height:28px;text-align:center;
+}
+.challenge-card:hover{border-color:var(--border-green);transform:translateY(-4px);}
+.challenge-emoji{font-size:2rem;margin-bottom:0.75rem;}
+.challenge-title{font-weight:700;font-size:1rem;margin-bottom:0.4rem;}
+.challenge-desc{font-size:0.83rem;color:var(--text-secondary);margin-bottom:1rem;}
+.challenge-points{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  font-size:0.78rem;font-weight:700;color:var(--eco-amber);
+}
+.challenge-btn{
+  width:100%;padding:0.6rem;border-radius:var(--radius-sm);
+  font-weight:600;font-size:0.83rem;margin-top:0.75rem;
+  transition:var(--transition);
+}
+.challenge-btn:not(.done){
+  background:rgba(0,232,150,0.1);color:var(--eco-green);
+  border:1px solid rgba(0,232,150,0.2);
+}
+.challenge-btn:not(.done):hover{background:rgba(0,232,150,0.2);}
+.challenge-btn.done{
+  background:var(--bg-card);color:var(--text-muted);
+  border:1px solid var(--border);cursor:not-allowed;
+}
+
+/* ACHIEVEMENTS */
+.achievements-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:1rem;
+}
+.achievement{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem;text-align:center;
+  transition:var(--transition);position:relative;
+}
+.achievement.unlocked{border-color:rgba(245,158,11,0.3);}
+.achievement.locked{opacity:0.4;filter:grayscale(1);}
+.achievement:hover{transform:translateY(-4px);}
+.achievement-icon{font-size:2rem;margin-bottom:0.5rem;}
+.achievement-name{font-size:0.78rem;font-weight:600;}
+.achievement-desc{font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem;}
+
+/* ======================================================== PAGE 7: AWARENESS/BLOG */
+.blog-search{
+  display:flex;gap:0.75rem;max-width:500px;margin-bottom:2rem;
+}
+.blog-filters{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.filter-btn{
+  padding:0.4rem 1rem;border-radius:50px;font-size:0.8rem;font-weight:600;
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-secondary);transition:var(--transition);cursor:pointer;
+}
+.filter-btn.active{
+  background:rgba(0,232,150,0.1);color:var(--eco-green);
+  border-color:rgba(0,232,150,0.2);
+}
+.blog-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:1.5rem;
+}
+.blog-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  transition:var(--transition);
+}
+.blog-card:hover{border-color:var(--border-green);transform:translateY(-5px);box-shadow:var(--shadow-green);}
+.blog-img{
+  height:180px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;
+  position:relative;overflow:hidden;
+}
+.blog-body{padding:1.5rem;}
+.blog-cat{font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--eco-green);margin-bottom:0.5rem;}
+.blog-title{font-family:var(--font-display);font-weight:700;font-size:1.05rem;line-height:1.3;margin-bottom:0.75rem;}
+.blog-excerpt{font-size:0.83rem;color:var(--text-secondary);line-height:1.5;margin-bottom:1rem;}
+.blog-meta{display:flex;align-items:center;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);}
+.blog-read-more{font-size:0.8rem;color:var(--eco-green);font-weight:600;cursor:pointer;transition:var(--transition);}
+.blog-read-more:hover{opacity:0.7;}
+
+/* ======================================================== PAGE 8: PROFILE */
+.profile-header{
+  background:linear-gradient(135deg,rgba(0,232,150,0.08),rgba(0,196,176,0.05));
+  border:1px solid var(--border-green);border-radius:var(--radius-xl);
+  padding:2.5rem;margin-bottom:2rem;
+  position:relative;overflow:hidden;
+}
+.profile-header::before{
+  content:'';position:absolute;top:-50px;right:-50px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,232,150,0.15),transparent 70%);
+}
+.profile-avatar{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:700;color:#080c10;
+  margin-bottom:1.25rem;
+  box-shadow:0 0 30px rgba(0,232,150,0.4);
+  border:3px solid rgba(0,232,150,0.3);
+}
+.profile-name{font-family:var(--font-display);font-weight:800;font-size:1.75rem;margin-bottom:0.25rem;}
+.profile-stats-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;
+}
+.profile-stat{
+  background:rgba(0,0,0,0.2);border-radius:var(--radius);padding:1rem;text-align:center;
+  border:1px solid var(--border);
+}
+.profile-stat-val{font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--eco-green);}
+.profile-stat-lbl{font-size:0.75rem;color:var(--text-muted);}
+.profile-edit-form{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:2rem;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+/* ======================================================== PAGE 9: LOGIN */
+.auth-layout{
+  min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+}
+.auth-visual{
+  background:linear-gradient(135deg,rgba(0,232,150,0.1),rgba(0,196,176,0.05));
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3rem;position:relative;overflow:hidden;
+}
+.auth-form-side{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3rem;
+}
+.auth-form-card{
+  width:100%;max-width:420px;
+}
+.auth-title{
+  font-family:var(--font-display);font-weight:800;font-size:2rem;
+  margin-bottom:0.5rem;
+}
+.auth-sub{font-size:0.9rem;color:var(--text-secondary);margin-bottom:2rem;}
+.auth-divider{
+  display:flex;align-items:center;gap:1rem;margin:1.5rem 0;
+}
+.auth-divider::before,.auth-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.auth-divider span{font-size:0.8rem;color:var(--text-muted);}
+.social-btn{
+  width:100%;padding:0.75rem;border-radius:var(--radius-sm);
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-primary);font-weight:500;font-size:0.9rem;
+  display:flex;align-items:center;justify-content:center;gap:0.75rem;
+  transition:var(--transition);margin-bottom:0.75rem;cursor:pointer;
+}
+.social-btn:hover{border-color:var(--border-green);background:rgba(0,232,150,0.04);}
+.auth-tabs{display:flex;margin-bottom:2rem;border-bottom:1px solid var(--border);}
+.auth-tab{
+  flex:1;padding:0.875rem;text-align:center;font-weight:600;font-size:0.9rem;
+  color:var(--text-muted);cursor:pointer;transition:var(--transition);
+  border-bottom:2px solid transparent;
+}
+.auth-tab.active{color:var(--eco-green);border-bottom-color:var(--eco-green);}
+
+/* ======================================================== FOOTER */
+.footer{
+  border-top:1px solid var(--border);
+  padding:4rem 0 2rem;
+  margin-top:4rem;
+}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;
+  margin-bottom:3rem;
+}
+.footer-brand-desc{
+  font-size:0.875rem;color:var(--text-secondary);
+  line-height:1.6;margin-top:0.75rem;max-width:280px;
+}
+.footer-col-title{font-weight:700;font-size:0.875rem;margin-bottom:1.25rem;}
+.footer-link{
+  display:block;font-size:0.85rem;color:var(--text-muted);
+  padding:0.3rem 0;transition:var(--transition);cursor:pointer;
+}
+.footer-link:hover{color:var(--eco-green);}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:2rem;border-top:1px solid var(--border);
+  font-size:0.8rem;color:var(--text-muted);flex-wrap:wrap;gap:1rem;
+}
+
+/* ============================================================ LOADING SCREEN */
+.loading-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg-primary);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:1.5rem;
+  transition:opacity 0.5s ease;
+}
+.loading-screen.hide{opacity:0;pointer-events:none;}
+.loader-ring{
+  width:60px;height:60px;border-radius:50%;
+  border:3px solid var(--border);
+  border-top-color:var(--eco-green);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-text{
+  font-family:var(--font-display);font-weight:700;font-size:1.25rem;
+  background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+/* ============================================================ COUNTER ANIMATION */
+.counter{display:inline-block;}
+
+/* ============================================================ AQI COLORS */
+.aqi-good{--aqi-color:#00e896;--aqi-glow:rgba(0,232,150,0.4);--aqi-bg:rgba(0,232,150,0.05);}
+.aqi-moderate{--aqi-color:#f59e0b;--aqi-glow:rgba(245,158,11,0.4);--aqi-bg:rgba(245,158,11,0.05);}
+.aqi-unhealthy-sg{--aqi-color:#f97316;--aqi-glow:rgba(249,115,22,0.4);--aqi-bg:rgba(249,115,22,0.05);}
+.aqi-unhealthy{--aqi-color:#ef4444;--aqi-glow:rgba(239,68,68,0.4);--aqi-bg:rgba(239,68,68,0.05);}
+.aqi-very-unhealthy{--aqi-color:#8b5cf6;--aqi-glow:rgba(139,92,246,0.4);--aqi-bg:rgba(139,92,246,0.05);}
+.aqi-hazardous{--aqi-color:#7f1d1d;--aqi-glow:rgba(127,29,29,0.4);--aqi-bg:rgba(127,29,29,0.05);}
+
+/* ============================================================ SECTION HEADERS */
+.section-header{text-align:center;margin-bottom:3.5rem;}
+.section-header .label{margin-bottom:0.75rem;display:block;}
+.section-header p{
+  max-width:560px;margin:1rem auto 0;
+  font-size:1rem;color:var(--text-secondary);line-height:1.6;
+}
+
+/* ============================================================ RESPONSIVE */
+@media(max-width:1024px){
+  .calc-layout{grid-template-columns:1fr;}
+  .calc-result{position:static;}
+  .ai-chat-layout{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .auth-layout{grid-template-columns:1fr;}
+  .auth-visual{display:none;}
+  .profile-stats-row{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .mobile-nav{display:block;}
+  .btn-nav-cta{display:none;}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .profile-stats-row{grid-template-columns:1fr;}
+  .hero-stats{gap:1.5rem;}
+  .container{padding:0 1rem;}
+  .section{padding:3rem 0;}
+  .dash-greeting{font-size:1.5rem;}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .achievements-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader-ring"></div>
+  <div class="loader-text">EcoSmart AI</div>
+  <p style="font-size:0.8rem;color:var(--text-muted);">Initializing sustainability engine…</p>
+</div>
+
+<!-- GRID BACKGROUND -->
+<div class="grid-bg"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand" onclick="navigate('home')">
+    <div class="brand-icon">🌿</div>
+    <span>EcoSmart AI</span>
+  </div>
+  <ul class="nav-links">
+    <li class="nav-link" data-page="home" onclick="navigate('home')">Home</li>
+    <li class="nav-link" data-page="dashboard" onclick="navigate('dashboard')">Dashboard</li>
+    <li class="nav-link" data-page="calculator" onclick="navigate('calculator')">Calculator</li>
+    <li class="nav-link" data-page="ai" onclick="navigate('ai')">AI Insights</li>
+    <li class="nav-link" data-page="airquality" onclick="navigate('airquality')">Air Quality</li>
+    <li class="nav-link" data-page="challenges" onclick="navigate('challenges')">Challenges</li>
+    <li class="nav-link" data-page="awareness" onclick="navigate('awareness')">Awareness</li>
+  </ul>
+  <div class="nav-actions">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="btn-nav-cta" onclick="navigate('profile')">My Profile</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-link" onclick="navigate('home');closeMobileNav()">🏠 Home</div>
+  <div class="mobile-nav-link" onclick="navigate('dashboard');closeMobileNav()">📊 Dashboard</div>
+  <div class="mobile-nav-link" onclick="navigate('calculator');closeMobileNav()">🧮 Calculator</div>
+  <div class="mobile-nav-link" onclick="navigate('ai');closeMobileNav()">🤖 AI Insights</div>
+  <div class="mobile-nav-link" onclick="navigate('airquality');closeMobileNav()">🌫️ Air Quality</div>
+  <div class="mobile-nav-link" onclick="navigate('challenges');closeMobileNav()">🌱 Challenges</div>
+  <div class="mobile-nav-link" onclick="navigate('awareness');closeMobileNav()">📚 Awareness</div>
+  <div class="mobile-nav-link" onclick="navigate('profile');closeMobileNav()">👤 Profile</div>
+  <div class="mobile-nav-link" onclick="navigate('login');closeMobileNav()">🔐 Login</div>
+</div>
+
+<!-- ====================================================================
+     PAGE 1: HOME
+     ==================================================================== -->
+<div class="page active" id="page-home">
+  <!-- PARTICLES -->
+  <div class="particles" id="particles"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div style="position:absolute;width:600px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,232,150,0.05),transparent 60%);border-radius:50%;"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🌍 AI-Powered Sustainability Platform</div>
+      <h1>Save the Planet<br><span class="text-gradient">Intelligently</span></h1>
+      <p class="hero-sub">EcoSmart AI analyzes your lifestyle, calculates your carbon footprint, and delivers personalized AI recommendations to help you live sustainably.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="navigate('calculator')">🌿 Calculate My Footprint</button>
+        <button class="btn btn-secondary btn-lg" onclick="navigate('dashboard')">📊 View Dashboard</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="12400">0</span>+</div>
+          <div class="hero-stat-label">Active Users</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--border);"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="850">0</span>t</div>
+          <div class="hero-stat-label">CO₂ Saved</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--border);"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="45000">0</span>+</div>
+          <div class="hero-stat-label">Eco Actions</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--border);"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="98">0</span>%</div>
+          <div class="hero-stat-label">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="label">Core Features</span>
+        <h2 class="heading-lg">Everything you need to<br><span class="text-gradient">go green</span></h2>
+        <p>A complete sustainability platform powered by AI, real-time data, and gamified challenges.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal" style="transition-delay:0.1s">
+          <div class="feature-icon">🧮</div>
+          <h3 class="heading-md" style="font-size:1.1rem;margin-bottom:0.5rem;">Carbon Calculator</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">Precisely calculate your CO₂ footprint across transport, energy, and food. Get an Eco Score from 0–100.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay:0.15s">
+          <div class="feature-icon">🤖</div>
+          <h3 class="heading-md" style="font-size:1.1rem;margin-bottom:0.5rem;">AI Insights</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">Get personalized AI recommendations based on your lifestyle data. Our engine learns from your habits.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay:0.2s">
+          <div class="feature-icon">🌫️</div>
+          <h3 class="heading-md" style="font-size:1.1rem;margin-bottom:0.5rem;">Live Air Quality</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">Real-time AQI monitoring for any city worldwide. Know when it's safe to go outside.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay:0.25s">
+          <div class="feature-icon">🏆</div>
+          <h3 class="heading-md" style="font-size:1.1rem;margin-bottom:0.5rem;">Eco Challenges</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">Daily and weekly challenges with a points system, levels, and achievements to keep you motivated.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay:0.3s">
+          <div class="feature-icon">📊</div>
+          <h3 class="heading-md" style="font-size:1.1rem;margin-bottom:0.5rem;">Smart Dashboard</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">Beautiful charts, animated statistics, and a weekly progress tracker to visualize your journey.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay:0.35s">
+          <div class="feature-icon">📚</div>
+          <h3 class="heading-md" style="font-size:1.1rem;margin-bottom:0.5rem;">Awareness Hub</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">Curated articles, sustainability tips, and climate science — all in a searchable knowledge base.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" style="background:rgba(0,232,150,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="label">How It Works</span>
+        <h2 class="heading-lg">Four steps to a<br><span class="text-gradient">greener life</span></h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step reveal" style="transition-delay:0.1s">
+          <div class="step-num">1</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem;">Create Profile</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);">Sign up and tell us about your lifestyle, location, and habits.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.2s">
+          <div class="step-num">2</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem;">Calculate Footprint</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);">Use our calculator to find your current CO₂ emission level.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.3s">
+          <div class="step-num">3</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem;">Get AI Advice</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);">Receive personalized recommendations from our sustainability AI.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.4s">
+          <div class="step-num">4</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem;">Track & Improve</h3>
+          <p style="font-size:0.875rem;color:var(--text-secondary);">Complete challenges, earn points, and watch your eco score rise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="label">Testimonials</span>
+        <h2 class="heading-lg">Loved by <span class="text-gradient">eco warriors</span></h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial reveal" style="transition-delay:0.1s">
+          <p class="testimonial-text">"EcoSmart AI helped me reduce my carbon footprint by 34% in just 3 months. The AI recommendations are incredibly specific and actionable."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SA</div>
+            <div><div class="author-name">Sneha Agarwal</div><div class="author-role">Environmental Consultant</div></div>
+          </div>
+        </div>
+        <div class="testimonial reveal" style="transition-delay:0.2s">
+          <p class="testimonial-text">"The daily challenges turned sustainability into a game. I've earned over 4,000 points and reached Eco Hero level — it's addictive in the best way!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">RK</div>
+            <div><div class="author-name">Rohan Kapoor</div><div class="author-role">Software Engineer</div></div>
+          </div>
+        </div>
+        <div class="testimonial reveal" style="transition-delay:0.3s">
+          <p class="testimonial-text">"The air quality monitoring feature is invaluable. I check it every morning before my jog. The UI is absolutely stunning — feels like Apple made it."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">PM</div>
+            <div><div class="author-name">Priya Mehta</div><div class="author-role">Health & Wellness Coach</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="section" style="text-align:center;">
+    <div class="container">
+      <div class="card-glass" style="max-width:700px;margin:0 auto;padding:4rem 3rem;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(0,232,150,0.15),transparent 70%);border-radius:50%;"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:3rem;margin-bottom:1rem;">🌍</div>
+          <h2 class="heading-lg" style="margin-bottom:1rem;">Ready to go <span class="text-gradient">green?</span></h2>
+          <p style="color:var(--text-secondary);margin-bottom:2rem;">Join thousands of users making a real difference for our planet.</p>
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-lg" onclick="navigate('login')">🚀 Get Started Free</button>
+            <button class="btn btn-secondary btn-lg" onclick="navigate('awareness')">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="nav-brand" style="margin-bottom:0.75rem;">
+            <div class="brand-icon" style="width:32px;height:32px;">🌿</div>
+            <span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;background:linear-gradient(135deg,var(--eco-green),var(--eco-teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">EcoSmart AI</span>
+          </div>
+          <p class="footer-brand-desc">Making sustainability accessible, measurable, and rewarding through AI-powered insights.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Platform</div>
+          <a class="footer-link" onclick="navigate('dashboard')">Dashboard</a>
+          <a class="footer-link" onclick="navigate('calculator')">Calculator</a>
+          <a class="footer-link" onclick="navigate('ai')">AI Insights</a>
+          <a class="footer-link" onclick="navigate('challenges')">Challenges</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Resources</div>
+          <a class="footer-link" onclick="navigate('awareness')">Blog</a>
+          <a class="footer-link" onclick="navigate('airquality')">Air Quality</a>
+          <a class="footer-link" onclick="navigate('profile')">Profile</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <a class="footer-link">About Us</a>
+          <a class="footer-link">Privacy Policy</a>
+          <a class="footer-link">Terms of Service</a>
+          <a class="footer-link">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 EcoSmart AI. Built for a greener tomorrow.</span>
+        <span>🌿 Carbon Neutral Platform</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ====================================================================
+     PAGE 2: DASHBOARD
+     ==================================================================== -->
+<div class="page" id="page-dashboard">
+  <div class="container">
+    <div class="dash-header">
+      <div class="flex-between flex-wrap gap-2">
+        <div>
+          <div class="dash-greeting" id="dashGreeting">Good morning, Eco Warrior! 👋</div>
+          <p class="text-muted" style="font-size:0.875rem;">Your sustainability journey at a glance</p>
+        </div>
+        <div class="flex gap-2">
+          <span class="badge badge-green" id="dashLevel">🌱 Green Warrior</span>
+          <button class="btn btn-secondary btn-sm" onclick="navigate('calculator')">Update Data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card" style="--accent-color:rgba(0,232,150,0.15)">
+        <div class="stat-icon">🌿</div>
+        <div class="stat-value text-gradient" id="statEcoScore">0</div>
+        <div class="stat-label">Eco Score</div>
+        <div class="stat-change up" id="statEcoChange">↑ +5 this week</div>
+      </div>
+      <div class="stat-card" style="--accent-color:rgba(14,165,233,0.15)">
+        <div class="stat-icon">💨</div>
+        <div class="stat-value" style="color:var(--eco-blue)" id="statCO2">0</div>
+        <div class="stat-label">kg CO₂ / month</div>
+        <div class="stat-change down" id="statCO2Change">↓ -12% vs avg</div>
+      </div>
+      <div class="stat-card" style="--accent-color:rgba(245,158,11,0.15)">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" style="color:var(--eco-amber)" id="statPoints">0</div>
+        <div class="stat-label">Eco Points</div>
+        <div class="stat-change up">↑ Earned today</div>
+      </div>
+      <div class="stat-card" style="--accent-color:rgba(139,92,246,0.15)">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" style="color:var(--eco-purple)" id="statChallenges">0</div>
+        <div class="stat-label">Challenges Done</div>
+        <div class="stat-change up">This month</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="grid-2" style="margin-bottom:2rem;">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Weekly CO₂ Emissions</div>
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="switchChart('week',this)">Week</button>
+            <button class="chart-tab" onclick="switchChart('month',this)">Month</button>
+          </div>
+        </div>
+        <canvas id="emissionsChart" height="200"></canvas>
+      </div>
+
+      <div class="chart-card flex-center flex-col" style="gap:1.5rem;">
+        <div class="heading-md" style="font-size:1rem;">Eco Score Progress</div>
+        <div class="eco-score-ring">
+          <svg class="ring-svg" viewBox="0 0 180 180">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00e896"/>
+                <stop offset="100%" style="stop-color:#00c4b0"/>
+              </linearGradient>
+            </defs>
+            <circle class="ring-bg" cx="90" cy="90" r="80"/>
+            <circle class="ring-fill" id="ringFill" cx="90" cy="90" r="80"/>
+          </svg>
+          <div class="ring-text">
+            <div class="ring-num" id="ringScore">0</div>
+            <div class="ring-label">/ 100</div>
+          </div>
+        </div>
+        <div class="label" id="ringLevelLabel">Calculating…</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="grid-2" style="margin-bottom:2rem;">
+      <div class="chart-card">
+        <div class="chart-header" style="margin-bottom:1rem;">
+          <div class="chart-title">Emission Breakdown</div>
+        </div>
+        <canvas id="breakdownChart" height="220"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header" style="margin-bottom:1rem;">
+          <div class="chart-title">Recent Activity</div>
+        </div>
+        <div id="activityFeed">
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div><div class="activity-text">Completed "Zero Plastic Day" challenge</div><div class="activity-time">2 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--eco-blue);box-shadow:0 0 8px var(--eco-blue)"></div>
+            <div><div class="activity-text">Carbon footprint recalculated</div><div class="activity-time">Yesterday</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--eco-amber);box-shadow:0 0 8px var(--eco-amber)"></div>
+            <div><div class="activity-text">Earned "Tree Hugger" achievement</div><div class="activity-time">3 days ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div><div class="activity-text">Used public transport — saved 2.4 kg CO₂</div><div class="activity-time">5 days ago</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS BARS -->
+    <div class="chart-card" style="margin-bottom:2rem;">
+      <div class="chart-title" style="margin-bottom:1.5rem;">Category Reductions vs Last Month</div>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="flex-between" style="margin-bottom:0.5rem;">
+            <span style="font-size:0.875rem;">🚗 Transport</span>
+            <span style="font-size:0.875rem;color:var(--eco-green);">-22%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+        </div>
+        <div>
+          <div class="flex-between" style="margin-bottom:0.5rem;">
+            <span style="font-size:0.875rem;">⚡ Energy</span>
+            <span style="font-size:0.875rem;color:var(--eco-amber);">-8%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:45%;background:linear-gradient(90deg,var(--eco-amber),#f97316)"></div></div>
+        </div>
+        <div>
+          <div class="flex-between" style="margin-bottom:0.5rem;">
+            <span style="font-size:0.875rem;">🥦 Food</span>
+            <span style="font-size:0.875rem;color:var(--eco-green);">-31%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:69%"></div></div>
+        </div>
+        <div>
+          <div class="flex-between" style="margin-bottom:0.5rem;">
+            <span style="font-size:0.875rem;">🛒 Shopping</span>
+            <span style="font-size:0.875rem;color:var(--eco-red);">+5%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:30%;background:linear-gradient(90deg,var(--eco-red),#f97316)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 3: CARBON CALCULATOR
+     ==================================================================== -->
+<div class="page" id="page-calculator">
+  <div class="container section-sm">
+    <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+      <span class="label">Carbon Footprint</span>
+      <h1 class="heading-lg">Calculate Your <span class="text-gradient">CO₂ Impact</span></h1>
+      <p style="margin:0;color:var(--text-secondary);">Answer a few questions about your lifestyle to get your personalized carbon footprint and Eco Score.</p>
+    </div>
+
+    <div class="calc-layout">
+      <!-- FORM -->
+      <div class="calc-form">
+        <!-- TRANSPORT -->
+        <div class="calc-section-title">🚗 Transport</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;">
+          <div class="input-group">
+            <label class="input-label">Primary mode of transport</label>
+            <select class="input" id="transport" onchange="calcUpdate()">
+              <option value="car_petrol">Car (Petrol)</option>
+              <option value="car_diesel">Car (Diesel)</option>
+              <option value="car_electric">Car (Electric)</option>
+              <option value="public">Public Transport</option>
+              <option value="bike">Bicycle / Walking</option>
+              <option value="motorcycle">Motorcycle</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Distance travelled per day (km): <strong id="distVal">20</strong></label>
+            <input type="range" id="distance" min="0" max="200" value="20" oninput="document.getElementById('distVal').textContent=this.value;calcUpdate()"/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Flights per year</label>
+            <select class="input" id="flights" onchange="calcUpdate()">
+              <option value="0">None</option>
+              <option value="1">1–2 short-haul</option>
+              <option value="2">3–5 short-haul</option>
+              <option value="3">1–2 long-haul</option>
+              <option value="4">3+ long-haul</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ENERGY -->
+        <div class="calc-section-title">⚡ Home Energy</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;">
+          <div class="input-group">
+            <label class="input-label">Monthly electricity bill (₹)</label>
+            <select class="input" id="electricity" onchange="calcUpdate()">
+              <option value="1">Under ₹500</option>
+              <option value="2" selected>₹500 – ₹1500</option>
+              <option value="3">₹1500 – ₹3000</option>
+              <option value="4">₹3000 – ₹6000</option>
+              <option value="5">Over ₹6000</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Home size</label>
+            <select class="input" id="homeSize" onchange="calcUpdate()">
+              <option value="1">Studio / 1BHK</option>
+              <option value="2" selected>2BHK</option>
+              <option value="3">3BHK</option>
+              <option value="4">4BHK+</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Use of renewable energy</label>
+            <select class="input" id="renewable" onchange="calcUpdate()">
+              <option value="0">No</option>
+              <option value="0.3">Partial (solar water heater, etc.)</option>
+              <option value="0.6">Significant (rooftop solar)</option>
+              <option value="0.9">Mostly renewable</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- FOOD -->
+        <div class="calc-section-title">🥦 Diet & Food</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;">
+          <div class="input-group">
+            <label class="input-label">Diet type</label>
+            <select class="input" id="diet" onchange="calcUpdate()">
+              <option value="vegan">Vegan</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="flexitarian" selected>Flexitarian</option>
+              <option value="omnivore">Omnivore (meat most days)</option>
+              <option value="heavy_meat">Heavy Meat Eater</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Food waste level</label>
+            <select class="input" id="foodWaste" onchange="calcUpdate()">
+              <option value="0.8">Very Low (composting, etc.)</option>
+              <option value="1" selected>Average</option>
+              <option value="1.3">High</option>
+              <option value="1.6">Very High</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Local/organic food preference</label>
+            <select class="input" id="localFood" onchange="calcUpdate()">
+              <option value="0.9">Usually local & seasonal</option>
+              <option value="1" selected>Mix</option>
+              <option value="1.1">Mostly imported</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- SHOPPING -->
+        <div class="calc-section-title">🛒 Shopping & Lifestyle</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;">
+          <div class="input-group">
+            <label class="input-label">New clothes purchased per month</label>
+            <select class="input" id="clothes" onchange="calcUpdate()">
+              <option value="0.5">0–1 items</option>
+              <option value="1" selected>2–4 items</option>
+              <option value="1.5">5–8 items</option>
+              <option value="2">9+ items</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Electronic purchases per year</label>
+            <select class="input" id="electronics" onchange="calcUpdate()">
+              <option value="0.5">None</option>
+              <option value="1" selected>1–2 items</option>
+              <option value="1.5">3–5 items</option>
+              <option value="2">6+ items</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="saveCalcData()">💾 Save & Update Dashboard</button>
+      </div>
+
+      <!-- RESULT PANEL -->
+      <div class="calc-result">
+        <div class="result-card">
+          <div class="label" style="margin-bottom:0.75rem;">Your Monthly Footprint</div>
+          <div class="result-co2" id="resultCO2">0</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.25rem;">kg CO₂ equivalent</div>
+
+          <div style="margin:1.5rem 0;">
+            <div class="flex-between" style="margin-bottom:0.5rem;font-size:0.8rem;">
+              <span style="color:var(--text-muted);">Eco Score</span>
+              <span id="ecoScoreNum" style="font-weight:700;color:var(--eco-green);">0 / 100</span>
+            </div>
+            <div class="score-meter">
+              <div class="score-needle" id="scoreNeedle" style="left:50%"></div>
+            </div>
+            <div class="flex-between" style="font-size:0.72rem;color:var(--text-muted);">
+              <span>High Impact</span><span>Low Impact</span>
+            </div>
+          </div>
+
+          <div id="ecoScoreLabel" class="badge badge-green" style="display:inline-flex;margin:0 auto;">🌿 Calculating...</div>
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+          <div class="heading-md" style="font-size:1rem;margin-bottom:1rem;">Breakdown</div>
+          <div id="breakdownList">
+            <div class="breakdown-item"><div class="breakdown-label">🚗 Transport</div><div class="breakdown-value" id="bd-transport">0 kg</div></div>
+            <div class="breakdown-item"><div class="breakdown-label">⚡ Energy</div><div class="breakdown-value" id="bd-energy">0 kg</div></div>
+            <div class="breakdown-item"><div class="breakdown-label">🥦 Food</div><div class="breakdown-value" id="bd-food">0 kg</div></div>
+            <div class="breakdown-item"><div class="breakdown-label">🛒 Shopping</div><div class="breakdown-value" id="bd-shopping">0 kg</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="border-color:rgba(0,232,150,0.2);background:rgba(0,232,150,0.03);">
+          <div style="font-size:0.8rem;font-weight:600;color:var(--eco-green);margin-bottom:0.75rem;">🤖 AI Quick Tip</div>
+          <p id="calcTip" style="font-size:0.83rem;color:var(--text-secondary);line-height:1.5;">Fill in your data to receive a personalized AI recommendation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 4: AI INSIGHTS
+     ==================================================================== -->
+<div class="page" id="page-ai">
+  <div class="container section-sm">
+    <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+      <span class="label">Powered by AI</span>
+      <h1 class="heading-lg">EcoSmart <span class="text-gradient">AI Assistant</span></h1>
+      <p style="margin:0;color:var(--text-secondary);">Ask our AI anything about sustainability, get personalized recommendations based on your profile.</p>
+    </div>
+
+    <div class="ai-chat-layout">
+      <!-- CHAT -->
+      <div>
+        <div class="ai-messages" id="aiMessages">
+          <div class="ai-message">
+            <div class="ai-avatar bot">🤖</div>
+            <div class="ai-bubble">
+              <p><strong>Hello! I'm EcoSmart AI 🌿</strong><br>I'm here to help you live more sustainably. I can analyze your carbon footprint, suggest eco-friendly alternatives, answer climate questions, and create personalized action plans.</p>
+              <p style="margin-top:0.75rem;">What would you like to know?</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-input-area">
+          <textarea class="ai-input" id="aiInput" placeholder="Ask me anything about sustainability…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMessage()}" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+          <button class="ai-send-btn" onclick="sendAIMessage()">→</button>
+        </div>
+
+        <!-- QUICK PROMPTS -->
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;">
+          <button class="btn btn-ghost btn-sm" onclick="quickPrompt('How can I reduce my carbon footprint?')">Reduce footprint</button>
+          <button class="btn btn-ghost btn-sm" onclick="quickPrompt('What are the best sustainable diet choices?')">Eco diet tips</button>
+          <button class="btn btn-ghost btn-sm" onclick="quickPrompt('Explain climate change in simple terms')">Climate 101</button>
+          <button class="btn btn-ghost btn-sm" onclick="quickPrompt('How do I make my home more energy efficient?')">Energy savings</button>
+          <button class="btn btn-ghost btn-sm" onclick="quickPrompt('What is my personalized eco action plan?')">My action plan</button>
+        </div>
+      </div>
+
+      <!-- SIDEBAR: INSIGHTS -->
+      <div>
+        <div style="font-family:var(--font-display);font-weight:700;margin-bottom:1rem;">📊 Your AI Insights</div>
+        <div class="insight-cards" id="insightCards">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 5: AIR QUALITY
+     ==================================================================== -->
+<div class="page" id="page-airquality">
+  <div class="container section-sm">
+    <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+      <span class="label">Real-Time Data</span>
+      <h1 class="heading-lg">Air Quality <span class="text-gradient">Monitor</span></h1>
+    </div>
+
+    <div class="location-search" style="max-width:100%;">
+      <input type="text" class="input" id="cityInput" placeholder="Enter city name (e.g. Mumbai, Delhi)…" style="flex:1" onkeydown="if(event.key==='Enter')fetchAQI()"/>
+      <button class="btn btn-primary" onclick="fetchAQI()">🔍 Search</button>
+    </div>
+
+    <div class="aqi-hero" id="aqiHero">
+      <div style="margin-bottom:1rem;">
+        <div class="heading-lg" id="aqiCityName" style="margin-bottom:0.25rem;">Kolkata, India</div>
+        <div class="text-muted" style="font-size:0.85rem;" id="aqiUpdated">Loading air quality data…</div>
+      </div>
+
+      <div class="aqi-circle aqi-good" id="aqiCircle">
+        <div class="aqi-num" id="aqiNum">—</div>
+        <div class="aqi-label">AQI</div>
+      </div>
+
+      <div class="aqi-status" id="aqiStatus">Fetching…</div>
+      <div style="max-width:500px;margin:1rem auto;font-size:0.9rem;color:var(--text-secondary);text-align:center;" id="aqiHealth"></div>
+    </div>
+
+    <div class="aqi-grid" id="pollutantGrid">
+      <!-- pollutant cards inserted by JS -->
+    </div>
+
+    <div class="health-tips" id="healthTips" style="margin-top:2rem;">
+      <!-- health tips by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 6: CHALLENGES
+     ==================================================================== -->
+<div class="page" id="page-challenges">
+  <div class="container section-sm">
+    <!-- LEVEL BAR -->
+    <div class="level-bar">
+      <div class="level-info">
+        <div>
+          <div class="level-name" id="levelName">🌱 Beginner</div>
+          <div class="text-muted" style="font-size:0.8rem;" id="levelDesc">Complete challenges to level up!</div>
+        </div>
+        <div class="points-display">
+          <span>⚡</span>
+          <span class="points-num" id="totalPoints">0</span>
+          <span style="font-size:0.8rem;color:var(--text-secondary);">points</span>
+        </div>
+      </div>
+      <div class="progress-bar" style="height:12px;">
+        <div class="progress-fill" id="levelProgress" style="width:0%"></div>
+      </div>
+      <div class="flex-between" style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-muted);">
+        <span id="levelMin">0</span>
+        <span id="levelMax">500 pts to next level</span>
+      </div>
+    </div>
+
+    <div class="challenges-header">
+      <h2 class="heading-md">Daily Challenges</h2>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary btn-sm" onclick="resetChallenges()">🔄 Reset</button>
+        <button class="btn btn-primary btn-sm" onclick="navigate('profile')">🏆 Achievements</button>
+      </div>
+    </div>
+
+    <div class="challenge-grid" id="challengeGrid">
+      <!-- challenges by JS -->
+    </div>
+
+    <div style="margin-top:3rem;">
+      <h2 class="heading-md" style="margin-bottom:1.5rem;">🏆 Achievements</h2>
+      <div class="achievements-grid" id="achievementsGrid">
+        <!-- achievements by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 7: AWARENESS
+     ==================================================================== -->
+<div class="page" id="page-awareness">
+  <div class="container section-sm">
+    <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+      <span class="label">Knowledge Hub</span>
+      <h1 class="heading-lg">Sustainability <span class="text-gradient">Awareness</span></h1>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;align-items:center;">
+      <div class="blog-search" style="margin:0;flex:1;min-width:200px;">
+        <input type="text" class="input" id="blogSearch" placeholder="Search articles, tips, topics…" oninput="filterBlog()"/>
+        <button class="btn btn-primary" onclick="filterBlog()">🔍</button>
+      </div>
+    </div>
+
+    <div class="blog-filters" id="blogFilters">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-filter="climate" onclick="setFilter('climate',this)">🌍 Climate</button>
+      <button class="filter-btn" data-filter="energy" onclick="setFilter('energy',this)">⚡ Energy</button>
+      <button class="filter-btn" data-filter="food" onclick="setFilter('food',this)">🥦 Food</button>
+      <button class="filter-btn" data-filter="transport" onclick="setFilter('transport',this)">🚗 Transport</button>
+      <button class="filter-btn" data-filter="tips" onclick="setFilter('tips',this)">💡 Tips</button>
+    </div>
+
+    <div class="blog-grid" id="blogGrid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 8: PROFILE
+     ==================================================================== -->
+<div class="page" id="page-profile">
+  <div class="container section-sm">
+    <h1 class="heading-lg" style="margin-bottom:2rem;">My <span class="text-gradient">Profile</span></h1>
+
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">🌿</div>
+      <div class="heading-md" id="profileName">Eco Warrior</div>
+      <div class="text-muted" id="profileEmail" style="font-size:0.85rem;">user@ecosmart.ai</div>
+      <span class="badge badge-green" id="profileLevel" style="margin-top:0.5rem;">🌱 Beginner</span>
+
+      <div class="profile-stats-row">
+        <div class="profile-stat">
+          <div class="profile-stat-val" id="pStatScore">—</div>
+          <div class="profile-stat-lbl">Eco Score</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-val" id="pStatPoints">—</div>
+          <div class="profile-stat-lbl">Total Points</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-val" id="pStatCO2">—</div>
+          <div class="profile-stat-lbl">kg CO₂/mo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+      <div class="profile-edit-form">
+        <div class="heading-md" style="font-size:1.1rem;margin-bottom:1.5rem;">Edit Profile</div>
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">First Name</label>
+            <input class="input" id="pFirstName" type="text" placeholder="Your name"/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Last Name</label>
+            <input class="input" id="pLastName" type="text" placeholder="Last name"/>
+          </div>
+        </div>
+        <div class="input-group" style="margin-top:1rem;">
+          <label class="input-label">Email</label>
+          <input class="input" id="pEmail" type="email" placeholder="you@example.com"/>
+        </div>
+        <div class="input-group" style="margin-top:1rem;">
+          <label class="input-label">City</label>
+          <input class="input" id="pCity" type="text" placeholder="Your city"/>
+        </div>
+        <div class="input-group" style="margin-top:1rem;">
+          <label class="input-label">Sustainability Goal</label>
+          <select class="input" id="pGoal">
+            <option>Reduce carbon footprint by 20%</option>
+            <option>Go fully plant-based</option>
+            <option>Switch to renewable energy</option>
+            <option>Zero plastic lifestyle</option>
+            <option>Carbon neutrality</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" style="margin-top:1.5rem;width:100%;justify-content:center;" onclick="saveProfile()">Save Profile</button>
+      </div>
+
+      <div>
+        <div class="chart-card" style="margin-bottom:1.5rem;">
+          <div class="heading-md" style="font-size:1rem;margin-bottom:1rem;">🏆 My Achievements</div>
+          <div id="profileAchievements" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+        </div>
+        <div class="chart-card">
+          <div class="heading-md" style="font-size:1rem;margin-bottom:1rem;">📊 Saved Data</div>
+          <div id="profileSavedData"></div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:1rem;width:100%;justify-content:center;" onclick="clearAllData()">🗑️ Clear All Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 9: LOGIN
+     ==================================================================== -->
+<div class="page" id="page-login">
+  <div class="auth-layout" style="min-height:calc(100vh - var(--nav-height));">
+    <div class="auth-visual">
+      <div style="position:relative;z-index:1;text-align:center;">
+        <div style="font-size:5rem;margin-bottom:1.5rem;animation:float-emoji 3s ease-in-out infinite;">🌿</div>
+        <h2 class="heading-lg">Join the <span class="text-gradient">Green Revolution</span></h2>
+        <p style="color:var(--text-secondary);margin:1rem 0;max-width:400px;">Track your carbon footprint, get AI insights, and make a real difference for our planet.</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:2rem;text-align:left;max-width:280px;">
+          <div class="badge badge-green">✅ Free forever plan</div>
+          <div class="badge badge-green">✅ AI-powered recommendations</div>
+          <div class="badge badge-green">✅ Real-time air quality</div>
+          <div class="badge badge-green">✅ Gamified eco challenges</div>
+        </div>
+      </div>
+      <div style="position:absolute;top:10%;right:10%;width:200px;height:200px;background:radial-gradient(circle,rgba(0,232,150,0.15),transparent);border-radius:50%;"></div>
+      <div style="position:absolute;bottom:10%;left:5%;width:150px;height:150px;background:radial-gradient(circle,rgba(0,196,176,0.1),transparent);border-radius:50%;"></div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-form-card">
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login</div>
+          <div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
+          <h2 class="auth-title">Welcome back! 👋</h2>
+          <p class="auth-sub">Sign in to your EcoSmart account</p>
+
+          <div class="social-btn" onclick="socialLogin('Google')">
+            <span style="font-size:1.1rem;">G</span> Continue with Google
+          </div>
+          <div class="social-btn" onclick="socialLogin('GitHub')">
+            <span>⌥</span> Continue with GitHub
+          </div>
+
+          <div class="auth-divider"><span>or continue with email</span></div>
+
+          <div class="input-group" style="margin-bottom:1rem;">
+            <label class="input-label">Email address</label>
+            <input class="input" type="email" id="loginEmail" placeholder="you@example.com"/>
+          </div>
+          <div class="input-group" style="margin-bottom:1.5rem;">
+            <label class="input-label">Password</label>
+            <input class="input" type="password" id="loginPassword" placeholder="Your password"/>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="handleLogin()">Sign In →</button>
+          <div style="text-align:center;margin-top:1rem;font-size:0.83rem;color:var(--text-muted);">
+            Forgot password? <a style="color:var(--eco-green);cursor:pointer;">Reset it</a>
+          </div>
+        </div>
+
+        <!-- SIGNUP FORM -->
+        <div id="signupForm" style="display:none;">
+          <h2 class="auth-title">Create account 🌱</h2>
+          <p class="auth-sub">Join thousands of eco warriors</p>
+
+          <div class="social-btn" onclick="socialLogin('Google')">
+            <span style="font-size:1.1rem;">G</span> Sign up with Google
+          </div>
+
+          <div class="auth-divider"><span>or create with email</span></div>
+
+          <div class="form-row" style="margin-bottom:1rem;">
+            <div class="input-group">
+              <label class="input-label">First Name</label>
+              <input class="input" type="text" id="signupFirst" placeholder="Alex"/>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Last Name</label>
+              <input class="input" type="text" id="signupLast" placeholder="Green"/>
+            </div>
+          </div>
+          <div class="input-group" style="margin-bottom:1rem;">
+            <label class="input-label">Email</label>
+            <input class="input" type="email" id="signupEmail" placeholder="alex@example.com"/>
+          </div>
+          <div class="input-group" style="margin-bottom:1.5rem;">
+            <label class="input-label">Password</label>
+            <input class="input" type="password" id="signupPassword" placeholder="Choose a strong password"/>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="handleSignup()">Create Account →</button>
+          <div style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--text-muted);">
+            By signing up you agree to our <a style="color:var(--eco-green);">Terms</a> and <a style="color:var(--eco-green);">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     JAVASCRIPT
+     ==================================================================== -->
+<script>
+/* ============================================================
+   ROUTER & NAVIGATION
+   ============================================================ */
+const PAGES = ['home','dashboard','calculator','ai','airquality','challenges','awareness','profile','login'];
+let currentPage = 'home';
+
+function navigate(page) {
+  if (!PAGES.includes(page)) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === page);
+  });
+  document.querySelectorAll('.mobile-nav-link').forEach(l => {
+    l.classList.toggle('active', l.textContent.toLowerCase().includes(page));
+  });
+  currentPage = page;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  // Page-specific init
+  if (page === 'dashboard') initDashboard();
+  if (page === 'challenges') initChallenges();
+  if (page === 'awareness') initBlog();
+  if (page === 'profile') initProfile();
+  if (page === 'ai') initAIInsights();
+  if (page === 'airquality') initAQI();
+}
+
+/* ============================================================
+   SCROLL & NAVBAR
+   ============================================================ */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  // Reveal animations
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.88) {
+      el.classList.add('visible');
+    }
+  });
+});
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? 'light' : 'dark';
+  document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('ecosmart_theme', html.dataset.theme);
+}
+(function() {
+  const saved = localStorage.getItem('ecosmart_theme');
+  if (saved) {
+    document.documentElement.dataset.theme = saved;
+    document.getElementById('themeToggle').textContent = saved === 'light' ? '☀️' : '🌙';
+  }
+})();
+
+/* ============================================================
+   MOBILE NAV
+   ============================================================ */
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  const ham = document.getElementById('hamburger');
+  nav.classList.toggle('open');
+  ham.classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+function showToast(msg, type = 'success', duration = 3500) {
+  const icons = {success:'✅', error:'❌', info:'ℹ️', warning:'⚠️'};
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span class="toast-icon">${icons[type]||'📢'}</span><span class="toast-msg">${msg}</span><span class="toast-close" onclick="this.parentElement.remove()">✕</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.animation='toastOut 0.4s ease forwards'; setTimeout(()=>t.remove(), 400); }, duration);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(html) {
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+/* ============================================================
+   PARTICLES
+   ============================================================ */
+function createParticles() {
+  const c = document.getElementById('particles');
+  if (!c) return;
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+    p.style.opacity = Math.random() * 0.5;
+    p.style.width = p.style.height = (Math.random() * 3 + 2) + 'px';
+    c.appendChild(p);
+  }
+}
+
+/* ============================================================
+   COUNTER ANIMATION
+   ============================================================ */
+function animateCounters() {
+  document.querySelectorAll('.counter').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    let current = 0;
+    const step = target / 80;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current).toLocaleString();
+      if (current >= target) clearInterval(timer);
+    }, 20);
+  });
+}
+
+/* ============================================================
+   LOCAL STORAGE HELPERS
+   ============================================================ */
+const LS = {
+  get: k => { try { return JSON.parse(localStorage.getItem('eco_' + k)); } catch { return null; } },
+  set: (k, v) => localStorage.setItem('eco_' + k, JSON.stringify(v)),
+  del: k => localStorage.removeItem('eco_' + k)
+};
+
+/* ============================================================
+   CARBON CALCULATOR
+   ============================================================ */
+const TRANSPORT_FACTORS = {
+  car_petrol: 0.192, car_diesel: 0.171, car_electric: 0.053,
+  public: 0.089, bike: 0, motorcycle: 0.113
+};
+const DIET_BASE = { vegan: 50, vegetarian: 85, flexitarian: 130, omnivore: 180, heavy_meat: 250 };
+const ELECTRICITY_BASE = [0, 45, 90, 160, 280, 420];
+const FLIGHT_BASE = [0, 100, 220, 380, 650];
+
+let calcData = { transport: 0, energy: 0, food: 0, shopping: 0, total: 0, score: 50 };
+
+function calcUpdate() {
+  const transport = document.getElementById('transport').value;
+  const distance = parseFloat(document.getElementById('distance').value);
+  const flights = parseInt(document.getElementById('flights').value);
+  const electricity = parseInt(document.getElementById('electricity').value);
+  const homeSize = parseInt(document.getElementById('homeSize').value);
+  const renewable = parseFloat(document.getElementById('renewable').value);
+  const diet = document.getElementById('diet').value;
+  const foodWaste = parseFloat(document.getElementById('foodWaste').value);
+  const localFood = parseFloat(document.getElementById('localFood').value);
+  const clothes = parseFloat(document.getElementById('clothes').value);
+  const electronics = parseFloat(document.getElementById('electronics').value);
+
+  const transportCO2 = ((TRANSPORT_FACTORS[transport] * distance * 30) + (FLIGHT_BASE[flights] / 12));
+  const energyCO2 = (ELECTRICITY_BASE[electricity] * homeSize * 0.5) * (1 - renewable);
+  const foodCO2 = DIET_BASE[diet] * foodWaste * localFood;
+  const shoppingCO2 = clothes * 35 + electronics * 50;
+
+  const total = Math.round(transportCO2 + energyCO2 + foodCO2 + shoppingCO2);
+  // Global avg ~1000 kg/mo. Score: lower = higher score
+  const score = Math.max(0, Math.min(100, Math.round(100 - (total / 12))));
+
+  calcData = { transport: Math.round(transportCO2), energy: Math.round(energyCO2), food: Math.round(foodCO2), shopping: Math.round(shoppingCO2), total, score };
+
+  // Update UI
+  animateNum('resultCO2', total);
+  document.getElementById('ecoScoreNum').textContent = score + ' / 100';
+  document.getElementById('bd-transport').textContent = Math.round(transportCO2) + ' kg';
+  document.getElementById('bd-energy').textContent = Math.round(energyCO2) + ' kg';
+  document.getElementById('bd-food').textContent = Math.round(foodCO2) + ' kg';
+  document.getElementById('bd-shopping').textContent = Math.round(shoppingCO2) + ' kg';
+  // Needle: 0→score. needle pos = (1 - score/100) * 100%
+  document.getElementById('scoreNeedle').style.left = (100 - score) + '%';
+
+  // Score label
+  const sl = document.getElementById('ecoScoreLabel');
+  if (score >= 75) { sl.className='badge badge-green'; sl.textContent='🌿 Excellent'; }
+  else if (score >= 50) { sl.className='badge badge-blue'; sl.textContent='💧 Good'; }
+  else if (score >= 30) { sl.className='badge badge-amber'; sl.textContent='⚠️ Moderate'; }
+  else { sl.className='badge badge-red'; sl.textContent='🔴 Needs Improvement'; }
+
+  // AI tip
+  const tips = {
+    car_petrol: '🚗 You drive a petrol car! Switching to public transport just 3 days/week could cut your transport emissions by 40%.',
+    car_electric: '⚡ Great choice with an EV! Charging from renewable sources would make your transport nearly carbon-neutral.',
+    public: '🚌 Using public transport is fantastic. You\'re already saving ~60% vs driving solo.',
+    bike: '🚲 Zero-emission transport — you\'re a sustainability hero! Consider an e-bike for longer trips.',
+    default: '🌍 Your biggest opportunity is switching to plant-rich meals — this alone could save 500+ kg CO₂/year.'
+  };
+  document.getElementById('calcTip').textContent = tips[transport] || tips.default;
+}
+
+function animateNum(id, target) {
+  const el = document.getElementById(id);
+  let current = parseInt(el.textContent) || 0;
+  const step = (target - current) / 30;
+  const timer = setInterval(() => {
+    current += step;
+    el.textContent = Math.round(current);
+    if (Math.abs(current - target) < 1) { el.textContent = target; clearInterval(timer); }
+  }, 16);
+}
+
+function saveCalcData() {
+  LS.set('calcData', calcData);
+  showToast('Carbon data saved! Dashboard updated.', 'success');
+  navigate('dashboard');
+}
+
+// Initialize calculator
+setTimeout(calcUpdate, 100);
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+let emissionsChart, breakdownChart;
+
+function initDashboard() {
+  const data = LS.get('calcData') || { score: 62, total: 380, transport: 120, energy: 95, food: 115, shopping: 50 };
+  const points = LS.get('points') || 0;
+  const challenges = LS.get('completedChallenges') || [];
+
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+  document.getElementById('dashGreeting').textContent = `Good ${greet}, Eco Warrior! 👋`;
+
+  // Stats
+  animateNum('statEcoScore', data.score);
+  animateNum('statCO2', data.total);
+  animateNum('statPoints', points);
+  document.getElementById('statChallenges').textContent = challenges.length;
+
+  // Level
+  const level = getLevel(points);
+  document.getElementById('dashLevel').textContent = level.emoji + ' ' + level.name;
+
+  // Ring
+  setTimeout(() => {
+    const offset = 502 - (502 * data.score / 100);
+    document.getElementById('ringFill').style.strokeDashoffset = offset;
+    animateNum('ringScore', data.score);
+    document.getElementById('ringLevelLabel').textContent = getLevelByScore(data.score);
+  }, 300);
+
+  // Emissions Chart
+  const ctx1 = document.getElementById('emissionsChart').getContext('2d');
+  if (emissionsChart) emissionsChart.destroy();
+  const weekData = generateWeekData(data.total);
+  emissionsChart = new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [{
+        label: 'CO₂ (kg)',
+        data: weekData,
+        borderColor: '#00e896',
+        backgroundColor: 'rgba(0,232,150,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#00e896',
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(13,17,23,0.9)', titleColor: '#f0fdf4', bodyColor: '#94a3b8', borderColor: 'rgba(0,232,150,0.3)', borderWidth: 1, cornerRadius: 10, padding: 10 } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#475569', font: { family: "'DM Sans'" } } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#475569', font: { family: "'DM Sans'" } } }
+      }
+    }
+  });
+
+  // Breakdown doughnut
+  const ctx2 = document.getElementById('breakdownChart').getContext('2d');
+  if (breakdownChart) breakdownChart.destroy();
+  breakdownChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: ['Transport','Energy','Food','Shopping'],
+      datasets: [{
+        data: [data.transport, data.energy, data.food, data.shopping],
+        backgroundColor: ['rgba(0,232,150,0.8)','rgba(14,165,233,0.8)','rgba(245,158,11,0.8)','rgba(139,92,246,0.8)'],
+        borderColor: 'var(--bg-secondary)',
+        borderWidth: 3,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '70%',
+      plugins: {
+        legend: { position: 'right', labels: { color: '#94a3b8', font: { family: "'DM Sans'" }, boxWidth: 12, padding: 16 } },
+        tooltip: { backgroundColor: 'rgba(13,17,23,0.9)', titleColor: '#f0fdf4', bodyColor: '#94a3b8', borderColor: 'rgba(0,232,150,0.3)', borderWidth: 1, cornerRadius: 10 }
+      }
+    }
+  });
+}
+
+function generateWeekData(total) {
+  const daily = total / 30;
+  return Array.from({length:7}, () => parseFloat((daily * (0.7 + Math.random() * 0.6)).toFixed(1)));
+}
+
+function getLevelByScore(score) {
+  if (score >= 80) return '🌟 Eco Hero';
+  if (score >= 60) return '💚 Green Warrior';
+  if (score >= 40) return '🌱 Eco Learner';
+  return '🌍 Beginner';
+}
+
+function switchChart(period, btn) {
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  if (!emissionsChart) return;
+  const data = LS.get('calcData') || { total: 380 };
+  const pts = period === 'week' ? 7 : 30;
+  const labels = period === 'week' ? ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] :
+    Array.from({length:30}, (_,i) => i + 1 + '');
+  emissionsChart.data.labels = labels;
+  emissionsChart.data.datasets[0].data = Array.from({length:pts}, () => parseFloat(((data.total / 30) * (0.7 + Math.random() * 0.6)).toFixed(1)));
+  emissionsChart.update();
+}
+
+/* ============================================================
+   GAMIFICATION HELPERS
+   ============================================================ */
+const LEVELS = [
+  { name: 'Beginner', emoji: '🌱', min: 0, max: 499 },
+  { name: 'Green Warrior', emoji: '💚', min: 500, max: 1499 },
+  { name: 'Eco Hero', emoji: '🌟', min: 1500, max: 3999 },
+  { name: 'Earth Guardian', emoji: '🌍', min: 4000, max: Infinity }
+];
+function getLevel(points) {
+  return LEVELS.slice().reverse().find(l => points >= l.min) || LEVELS[0];
+}
+
+/* ============================================================
+   CHALLENGES
+   ============================================================ */
+const CHALLENGES = [
+  { id:'c1', emoji:'🥦', title:'Meatless Monday', desc:'Skip meat for an entire day.', points:80, category:'food' },
+  { id:'c2', emoji:'🚌', title:'Public Transport Day', desc:'Use only public transport today.', points:100, category:'transport' },
+  { id:'c3', emoji:'🛍️', title:'Zero Plastic Day', desc:'Avoid all single-use plastic.', points:90, category:'lifestyle' },
+  { id:'c4', emoji:'💡', title:'Energy Saver', desc:'Turn off all unused electronics for 12 hours.', points:60, category:'energy' },
+  { id:'c5', emoji:'🚿', title:'5-Minute Shower', desc:'Keep your shower under 5 minutes.', points:50, category:'water' },
+  { id:'c6', emoji:'🌳', title:'Plant a Thought', desc:'Share an eco tip with 3 friends.', points:70, category:'social' },
+  { id:'c7', emoji:'♻️', title:'Recycle Hero', desc:'Sort and recycle all waste correctly today.', points:65, category:'waste' },
+  { id:'c8', emoji:'🚶', title:'Walk 10,000 Steps', desc:'Walk instead of riding today.', points:85, category:'transport' },
+  { id:'c9', emoji:'🌿', title:'Buy Local', desc:'Purchase only locally sourced food today.', points:75, category:'food' },
+  { id:'c10', emoji:'📵', title:'Screen Detox', desc:'Reduce screen time by 50% for a day.', points:55, category:'energy' },
+  { id:'c11', emoji:'🌙', title:'Lights Out Hour', desc:'No lights for an hour this evening.', points:45, category:'energy' },
+  { id:'c12', emoji:'🍃', title:'Compost Start', desc:'Start a composting bin or bag today.', points:110, category:'waste' },
+];
+
+const ACHIEVEMENTS = [
+  { id:'a1', emoji:'🌱', name:'First Step', desc:'Complete your first challenge', condition: d => d.length >= 1 },
+  { id:'a2', emoji:'🔥', name:'On Fire', desc:'Complete 5 challenges', condition: d => d.length >= 5 },
+  { id:'a3', emoji:'💚', name:'Green Warrior', desc:'Earn 500 points', condition: d => (LS.get('points')||0) >= 500 },
+  { id:'a4', emoji:'🌟', name:'Eco Hero', desc:'Earn 1500 points', condition: d => (LS.get('points')||0) >= 1500 },
+  { id:'a5', emoji:'🏆', name:'Champion', desc:'Complete all challenges', condition: d => d.length >= CHALLENGES.length },
+  { id:'a6', emoji:'🍃', name:'Tree Hugger', desc:'Complete 3 challenges', condition: d => d.length >= 3 },
+  { id:'a7', emoji:'♻️', name:'Recycler', desc:'Complete Recycle Hero challenge', condition: d => d.includes('c7') },
+  { id:'a8', emoji:'🚶', name:'Walker', desc:'Complete Walk 10,000 Steps', condition: d => d.includes('c8') },
+];
+
+function initChallenges() {
+  const completed = LS.get('completedChallenges') || [];
+  const points = LS.get('points') || 0;
+  const level = getLevel(points);
+  const nextLevel = LEVELS[LEVELS.indexOf(level) + 1];
+
+  document.getElementById('totalPoints').textContent = points;
+  document.getElementById('levelName').textContent = level.emoji + ' ' + level.name;
+  document.getElementById('levelDesc').textContent = nextLevel ? `${nextLevel.min - points} pts to ${nextLevel.name}` : 'Max level reached!';
+
+  const progress = nextLevel ? ((points - level.min) / (nextLevel.min - level.min) * 100) : 100;
+  document.getElementById('levelProgress').style.width = progress + '%';
+  document.getElementById('levelMin').textContent = level.min;
+  document.getElementById('levelMax').textContent = nextLevel ? nextLevel.min + ' pts' : 'Max!';
+
+  // Challenges grid
+  const grid = document.getElementById('challengeGrid');
+  grid.innerHTML = '';
+  CHALLENGES.forEach(ch => {
+    const done = completed.includes(ch.id);
+    grid.innerHTML += `
+      <div class="challenge-card ${done ? 'completed' : ''}" id="card-${ch.id}">
+        <div class="challenge-emoji">${ch.emoji}</div>
+        <div class="challenge-title">${ch.title}</div>
+        <div class="challenge-desc">${ch.desc}</div>
+        <div class="challenge-points">⚡ +${ch.points} points</div>
+        <button class="challenge-btn ${done ? 'done' : ''}" onclick="completeChallenge('${ch.id}',${ch.points})" ${done ? 'disabled' : ''}>
+          ${done ? '✅ Completed!' : '✓ Mark Complete'}
+        </button>
+      </div>
+    `;
+  });
+
+  // Achievements
+  renderAchievements(completed);
+}
+
+function completeChallenge(id, pts) {
+  const completed = LS.get('completedChallenges') || [];
+  if (completed.includes(id)) return;
+  completed.push(id);
+  LS.set('completedChallenges', completed);
+  const currentPts = (LS.get('points') || 0) + pts;
+  LS.set('points', currentPts);
+
+  showToast(`+${pts} points earned! 🎉`, 'success');
+  const ch = CHALLENGES.find(c => c.id === id);
+
+  // Check for level up
+  const oldLevel = getLevel(currentPts - pts);
+  const newLevel = getLevel(currentPts);
+  if (oldLevel.name !== newLevel.name) {
+    setTimeout(() => {
+      openModal(`<div style="text-align:center;padding:1rem;">
+        <div style="font-size:4rem;margin-bottom:1rem;">${newLevel.emoji}</div>
+        <h2 class="heading-lg" style="margin-bottom:0.5rem;">Level Up!</h2>
+        <p style="color:var(--text-secondary);margin-bottom:1.5rem;">You've reached <strong style="color:var(--eco-green);">${newLevel.name}</strong>!</p>
+        <button class="btn btn-primary" onclick="closeModal()">🎉 Awesome!</button>
+      </div>`);
+    }, 500);
+  }
+
+  initChallenges();
+}
+
+function resetChallenges() {
+  if (!confirm('Reset all challenge progress?')) return;
+  LS.del('completedChallenges');
+  LS.del('points');
+  initChallenges();
+  showToast('Challenges reset!', 'info');
+}
+
+function renderAchievements(completed) {
+  const grid = document.getElementById('achievementsGrid');
+  grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(a => {
+    const unlocked = a.condition(completed);
+    grid.innerHTML += `
+      <div class="achievement ${unlocked ? 'unlocked' : 'locked'}">
+        <div class="achievement-icon">${a.emoji}</div>
+        <div class="achievement-name">${a.name}</div>
+        <div class="achievement-desc">${a.desc}</div>
+      </div>
+    `;
+  });
+}
+
+/* ============================================================
+   AI INSIGHTS
+   ============================================================ */
+const AI_RESPONSES = {
+  default: (data) => {
+    const score = data?.score || 50;
+    const co2 = data?.total || 400;
+    if (score >= 75) return `🌟 Your Eco Score of **${score}/100** is excellent! You're in the top 10% of sustainable users. Your CO₂ footprint of ${co2} kg/month is well below average. Continue your great work — focus on the remaining gaps in shopping and electronics.\n\n**Top recommendation:** Explore community solar programs to offset the last 10% of your emissions.`;
+    if (score >= 50) return `💚 Your Eco Score of **${score}/100** is good! Your carbon footprint of ${co2} kg/month is below average. Your biggest opportunities are in diet and transport. Switching to a vegetarian diet 3 days/week could save 180 kg CO₂ annually.\n\n**This week's action:** Try one Meatless Monday and walk/cycle for short trips under 3 km.`;
+    return `🌱 Your Eco Score is **${score}/100**. Your CO₂ footprint of ${co2} kg/month is above average. Don't worry — small changes add up fast!\n\n**Top 3 actions:**\n1. 🚌 Use public transport 2x/week → saves 120 kg CO₂/mo\n2. 🥦 Reduce meat to 3 meals/week → saves 60 kg CO₂/mo\n3. 💡 Smart power strips → saves 20 kg CO₂/mo\n\nYou could cut your footprint by **38%** in just one month!`;
+  },
+  footprint: () => "Your carbon footprint is the total greenhouse gas emissions caused by your activities. It includes:\n\n🚗 **Transport** – Cars, flights, public transit\n⚡ **Energy** – Electricity, heating, cooling\n🥦 **Food** – What and how much you eat\n🛒 **Shopping** – Goods, services, and waste\n\nThe average Indian emits ~1.8 tonnes CO₂/year. Our calculator helps you measure yours precisely.",
+  diet: () => "🥦 **Sustainable Diet Tips:**\n\n1. **Go plant-based** – Vegan diet emits 2.5x less CO₂ than heavy meat eating\n2. **Eat local & seasonal** – Reduces transport emissions by up to 11%\n3. **Reduce food waste** – 8% of global emissions come from food waste\n4. **Choose whole foods** – Less processing = less energy used\n\nEven going vegetarian just 3 days/week saves ~0.5 tonnes CO₂/year!",
+  climate: () => "🌍 **Climate Change – Simply Explained:**\n\nClimate change happens because we burn fossil fuels (coal, oil, gas), releasing CO₂ and other greenhouse gases. These gases trap heat in Earth's atmosphere — like a blanket getting thicker.\n\n**The numbers:**\n• 1.2°C – Current warming above pre-industrial levels\n• 1.5°C – The 'safe' threshold (Paris Agreement)\n• 2050 – Net-zero target for most countries\n\n**Good news:** Renewable energy is now cheaper than coal in most of the world. The green transition is accelerating!",
+  home: () => "⚡ **Making Your Home Energy Efficient:**\n\n1. **LED lighting** – Uses 75% less energy than incandescent\n2. **Smart thermostat** – Saves 10-15% on heating/cooling\n3. **Solar panels** – Can cut electricity bills by 50-90%\n4. **Insulation** – Proper insulation = 20-30% energy savings\n5. **Energy Star appliances** – 10-50% more efficient\n6. **Unplug standby devices** – 'Vampire power' costs ~₹2,000/year\n\nStart with LED bulbs and power strips — immediate ROI!",
+  plan: (data) => {
+    const score = data?.score || 50;
+    return `🗺️ **Your Personalized 30-Day Eco Action Plan:**\n\n**Week 1 – Quick Wins**\n✅ Switch to LED bulbs\n✅ Install a low-flow showerhead\n✅ Start composting food scraps\n\n**Week 2 – Mobility**\n✅ Use public transport 3x\n✅ Combine errands into one trip\n✅ Walk/cycle for trips under 3 km\n\n**Week 3 – Diet Shift**\n✅ Try 3 fully plant-based days\n✅ Shop at a local farmer's market\n✅ Plan meals to reduce waste\n\n**Week 4 – Energy**\n✅ Set appliances to eco mode\n✅ Wash clothes in cold water\n✅ Unplug standby electronics\n\n**Projected result:** −25% CO₂ footprint, +15 Eco Score points!`;
+  }
+};
+
+function getAIResponse(msg, data) {
+  const m = msg.toLowerCase();
+  if (m.includes('footprint') || m.includes('carbon') || m.includes('co2')) return AI_RESPONSES.footprint();
+  if (m.includes('diet') || m.includes('food') || m.includes('plant') || m.includes('veg')) return AI_RESPONSES.diet();
+  if (m.includes('climate') || m.includes('global warming') || m.includes('greenhouse')) return AI_RESPONSES.climate();
+  if (m.includes('home') || m.includes('energy') || m.includes('electricity') || m.includes('efficient')) return AI_RESPONSES.home();
+  if (m.includes('plan') || m.includes('action') || m.includes('recommend') || m.includes('suggest')) return AI_RESPONSES.plan(data);
+  return AI_RESPONSES.default(data);
+}
+
+function addMessage(content, isBot = true) {
+  const feed = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-message' + (isBot ? '' : ' user-message');
+  const md = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  div.innerHTML = `
+    <div class="ai-avatar ${isBot ? 'bot' : 'user'}">${isBot ? '🤖' : '👤'}</div>
+    <div class="ai-bubble ${isBot ? '' : 'user-msg'}"><p>${md}</p></div>
+  `;
+  feed.appendChild(div);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function showTyping() {
+  const feed = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-message';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="ai-avatar bot">🤖</div><div class="ai-bubble"><div class="ai-typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  feed.appendChild(div);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function sendAIMessage() {
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  addMessage(msg, false);
+  input.value = '';
+  input.style.height = 'auto';
+
+  showTyping();
+  const data = LS.get('calcData');
+  setTimeout(() => {
+    document.getElementById('typingIndicator')?.remove();
+    addMessage(getAIResponse(msg, data));
+  }, 1200 + Math.random() * 800);
+}
+
+function quickPrompt(text) {
+  document.getElementById('aiInput').value = text;
+  sendAIMessage();
+}
+
+function initAIInsights() {
+  const data = LS.get('calcData');
+  const cards = [
+    { icon: '🚗', title: 'Transport Analysis', desc: 'Your transport footprint and alternatives' },
+    { icon: '🥦', title: 'Diet Optimization', desc: 'Food choices for lower emissions' },
+    { icon: '⚡', title: 'Energy Efficiency', desc: 'Home energy saving opportunities' },
+    { icon: '📈', title: 'Progress Tracker', desc: 'Your sustainability journey so far' },
+    { icon: '🌍', title: 'Global Impact', desc: 'How your choices affect the planet' },
+  ];
+  document.getElementById('insightCards').innerHTML = cards.map(c => `
+    <div class="insight-card" onclick="quickPrompt('Tell me about ${c.title.toLowerCase()}')">
+      <div class="insight-icon">${c.icon}</div>
+      <div class="insight-title">${c.title}</div>
+      <div class="insight-desc">${c.desc}</div>
+    </div>
+  `).join('');
+}
+
+/* ============================================================
+   AIR QUALITY
+   ============================================================ */
+const AQI_LEVELS = [
+  { max: 50, label: 'Good', class: 'aqi-good', health: '✅ Air quality is satisfactory. It\'s a great day to be outdoors!' },
+  { max: 100, label: 'Moderate', class: 'aqi-moderate', health: '🟡 Some pollutants may concern sensitive individuals. Generally safe for most.' },
+  { max: 150, label: 'Unhealthy for Sensitive Groups', class: 'aqi-unhealthy-sg', health: '🟠 Sensitive individuals (elderly, children, asthma) should limit outdoor activity.' },
+  { max: 200, label: 'Unhealthy', class: 'aqi-unhealthy', health: '🔴 Everyone may begin to experience health effects. Limit outdoor exertion.' },
+  { max: 300, label: 'Very Unhealthy', class: 'aqi-very-unhealthy', health: '🟣 Health alert! Serious effects for everyone. Avoid outdoor activities.' },
+  { max: 500, label: 'Hazardous', class: 'aqi-hazardous', health: '☠️ Health emergency! Everyone should avoid all outdoor activity.' },
+];
+
+// Simulated AQI data for cities
+const CITY_AQI = {
+  kolkata: { aqi: 142, city: 'Kolkata, India', pm25: 68.4, pm10: 95.2, no2: 42.1, o3: 31.5, co: 0.8 },
+  delhi: { aqi: 187, city: 'New Delhi, India', pm25: 112.3, pm10: 168.7, no2: 89.2, o3: 28.4, co: 1.4 },
+  mumbai: { aqi: 98, city: 'Mumbai, India', pm25: 41.2, pm10: 62.8, no2: 35.6, o3: 44.2, co: 0.6 },
+  bangalore: { aqi: 76, city: 'Bengaluru, India', pm25: 28.9, pm10: 45.3, no2: 22.4, o3: 38.7, co: 0.4 },
+  london: { aqi: 42, city: 'London, UK', pm25: 12.1, pm10: 18.4, no2: 28.3, o3: 54.2, co: 0.2 },
+  beijing: { aqi: 156, city: 'Beijing, China', pm25: 89.4, pm10: 124.8, no2: 67.3, o3: 25.1, co: 1.1 },
+  newyork: { aqi: 38, city: 'New York, USA', pm25: 8.2, pm10: 14.6, no2: 31.2, o3: 62.8, co: 0.3 },
+  paris: { aqi: 55, city: 'Paris, France', pm25: 18.7, pm10: 28.3, no2: 41.5, o3: 47.6, co: 0.4 },
+  default: { aqi: Math.floor(Math.random() * 150 + 30), city: 'Searched City', pm25: 35.2, pm10: 55.8, no2: 28.4, o3: 42.1, co: 0.5 }
+};
+
+function getAQILevel(aqi) {
+  return AQI_LEVELS.find(l => aqi <= l.max) || AQI_LEVELS[AQI_LEVELS.length - 1];
+}
+
+function fetchAQI() {
+  const city = document.getElementById('cityInput').value.toLowerCase().replace(/\s/g,'');
+  const d = CITY_AQI[city] || { ...CITY_AQI.default, aqi: Math.floor(Math.random()*150+30), city: document.getElementById('cityInput').value || 'Unknown City' };
+  renderAQI(d);
+  showToast('Air quality data loaded!', 'success');
+}
+
+function renderAQI(d) {
+  const level = getAQILevel(d.aqi);
+  const circle = document.getElementById('aqiCircle');
+  circle.className = 'aqi-circle ' + level.class;
+  document.getElementById('aqiNum').textContent = d.aqi;
+  document.getElementById('aqiStatus').textContent = level.label;
+  document.getElementById('aqiCityName').textContent = d.city;
+  document.getElementById('aqiHealth').textContent = level.health;
+  document.getElementById('aqiUpdated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+
+  // Pollutants
+  document.getElementById('pollutantGrid').innerHTML = `
+    <div class="pollutant-card"><div class="pollutant-name">PM2.5</div><div class="pollutant-value">${d.pm25}</div><div class="pollutant-unit">μg/m³</div></div>
+    <div class="pollutant-card"><div class="pollutant-name">PM10</div><div class="pollutant-value">${d.pm10}</div><div class="pollutant-unit">μg/m³</div></div>
+    <div class="pollutant-card"><div class="pollutant-name">NO₂</div><div class="pollutant-value">${d.no2}</div><div class="pollutant-unit">μg/m³</div></div>
+    <div class="pollutant-card"><div class="pollutant-name">O₃</div><div class="pollutant-value">${d.o3}</div><div class="pollutant-unit">μg/m³</div></div>
+    <div class="pollutant-card"><div class="pollutant-name">CO</div><div class="pollutant-value">${d.co}</div><div class="pollutant-unit">mg/m³</div></div>
+  `;
+
+  // Health tips based on AQI
+  const tips = d.aqi <= 50 ? [
+    { icon:'🏃', title:'Safe to Exercise Outdoors', desc:'Great conditions for outdoor workouts.' },
+    { icon:'🪟', title:'Open Your Windows', desc:'Ventilate your home with fresh air.' },
+    { icon:'🌳', title:'Visit Green Spaces', desc:'Perfect day for parks and nature.' },
+  ] : d.aqi <= 100 ? [
+    { icon:'😷', title:'Sensitive Groups – Caution', desc:'Those with respiratory conditions should take care.' },
+    { icon:'💧', title:'Stay Hydrated', desc:'Drink plenty of water if spending time outdoors.' },
+    { icon:'🚪', title:'Monitor Outdoor Time', desc:'Limit strenuous outdoor activity.' },
+  ] : [
+    { icon:'🏠', title:'Stay Indoors', desc:'Keep windows and doors closed. Use air purifiers.' },
+    { icon:'😷', title:'Wear N95 Mask', desc:'If you must go out, wear a proper respirator mask.' },
+    { icon:'🌿', title:'Air Purifying Plants', desc:'Place spider plants or peace lilies indoors.' },
+  ];
+
+  document.getElementById('healthTips').innerHTML = tips.map(t => `
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">${t.icon}</div>
+      <div style="font-weight:700;margin-bottom:0.25rem;">${t.title}</div>
+      <div style="font-size:0.83rem;color:var(--text-secondary);">${t.desc}</div>
+    </div>
+  `).join('');
+}
+
+function initAQI() {
+  renderAQI(CITY_AQI.kolkata);
+}
+
+/* ============================================================
+   AWARENESS / BLOG
+   ============================================================ */
+const BLOG_POSTS = [
+  { id:1, cat:'climate', emoji:'🌊', title:'Rising Sea Levels: What 2°C Means for Coastal Cities', excerpt:'Scientists warn that limiting warming to 2°C could still submerge cities like Miami and Mumbai by 2100. Here\'s what the data shows.', read:'6 min read', author:'EcoSmart Team' },
+  { id:2, cat:'energy', emoji:'☀️', title:'Solar Power is Now the Cheapest Energy in History', excerpt:'The cost of solar PV has dropped 89% in a decade. How this changes everything about our energy future.', read:'5 min read', author:'EcoSmart Team' },
+  { id:3, cat:'food', emoji:'🥩', title:'The Hidden Carbon Cost of Your Plate', excerpt:'A single beef burger emits more CO₂ than driving 30 km. Understanding food emissions is key to cutting your footprint.', read:'7 min read', author:'EcoSmart Team' },
+  { id:4, cat:'transport', emoji:'⚡', title:'Electric Vehicles: The Complete 2025 Guide', excerpt:'Everything you need to know about EVs — range, cost, charging infrastructure, and real-world carbon savings.', read:'10 min read', author:'EcoSmart Team' },
+  { id:5, cat:'tips', emoji:'🏠', title:'30 Ways to Make Your Home Carbon-Neutral', excerpt:'From smart thermostats to green roofs — a comprehensive guide to eliminating your home\'s carbon footprint.', read:'12 min read', author:'EcoSmart Team' },
+  { id:6, cat:'climate', emoji:'🌡️', title:'What Exactly is the Paris Agreement?', excerpt:'The landmark 2015 climate accord explained — what countries promised, how they\'re doing, and why it matters.', read:'4 min read', author:'EcoSmart Team' },
+  { id:7, cat:'food', emoji:'🌱', title:'The Rise of Vertical Farming', excerpt:'Growing food in city skyscrapers uses 95% less water and zero pesticides. The future of food production is here.', read:'5 min read', author:'EcoSmart Team' },
+  { id:8, cat:'energy', emoji:'💨', title:'Wind Energy: How Turbines Are Getting Bigger', excerpt:'Offshore wind turbines now stand taller than the Eiffel Tower. Here\'s why bigger is definitely better.', read:'6 min read', author:'EcoSmart Team' },
+  { id:9, cat:'tips', emoji:'🛒', title:'Sustainable Shopping: The 5 Questions to Ask Before Buying', excerpt:'A practical framework for making every purchase decision align with your sustainability values.', read:'4 min read', author:'EcoSmart Team' },
+];
+
+const BG_COLORS = ['rgba(0,232,150,0.08)','rgba(14,165,233,0.08)','rgba(245,158,11,0.08)','rgba(139,92,246,0.08)','rgba(239,68,68,0.08)'];
+let activeFilter = 'all';
+
+function initBlog() { renderBlog(); }
+
+function renderBlog() {
+  const search = document.getElementById('blogSearch')?.value.toLowerCase() || '';
+  const grid = document.getElementById('blogGrid');
+  const filtered = BLOG_POSTS.filter(p =>
+    (activeFilter === 'all' || p.cat === activeFilter) &&
+    (p.title.toLowerCase().includes(search) || p.excerpt.toLowerCase().includes(search))
+  );
+  if (filtered.length === 0) { grid.innerHTML = '<div style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:3rem;">No articles found. Try a different search or filter.</div>'; return; }
+  grid.innerHTML = filtered.map((p, i) => `
+    <div class="blog-card reveal" style="transition-delay:${i*0.05}s">
+      <div class="blog-img" style="background:${BG_COLORS[i%BG_COLORS.length]};">${p.emoji}</div>
+      <div class="blog-body">
+        <div class="blog-cat">${p.cat}</div>
+        <div class="blog-title">${p.title}</div>
+        <div class="blog-excerpt">${p.excerpt}</div>
+        <div class="blog-meta">
+          <span>${p.read}</span>
+          <span class="blog-read-more" onclick="openBlogPost(${p.id})">Read More →</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  setTimeout(() => document.querySelectorAll('.reveal').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible');
+  }), 100);
+}
+
+function filterBlog() { renderBlog(); }
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBlog();
+}
+
+function openBlogPost(id) {
+  const post = BLOG_POSTS.find(p => p.id === id);
+  if (!post) return;
+  openModal(`
+    <div style="font-size:3rem;margin-bottom:1rem;">${post.emoji}</div>
+    <div class="label" style="margin-bottom:0.5rem;">${post.cat}</div>
+    <h2 class="heading-md" style="margin-bottom:1rem;">${post.title}</h2>
+    <p style="color:var(--text-secondary);line-height:1.7;font-size:0.9rem;">${post.excerpt}</p>
+    <p style="margin-top:1rem;color:var(--text-secondary);line-height:1.7;font-size:0.9rem;">This is a simulated article preview. In a full deployment, this would link to the complete article with rich content, images, and references.</p>
+    <div style="display:flex;align-items:center;gap:1rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
+      <span style="font-size:0.8rem;color:var(--text-muted);">${post.read}</span>
+      <span style="font-size:0.8rem;color:var(--text-muted);">by ${post.author}</span>
+      <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="closeModal()">Close</button>
+    </div>
+  `);
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function initProfile() {
+  const profile = LS.get('profile') || {};
+  const data = LS.get('calcData') || {};
+  const points = LS.get('points') || 0;
+  const completed = LS.get('completedChallenges') || [];
+  const level = getLevel(points);
+
+  document.getElementById('profileName').textContent = (profile.firstName || 'Eco') + ' ' + (profile.lastName || 'Warrior');
+  document.getElementById('profileEmail').textContent = profile.email || 'user@ecosmart.ai';
+  document.getElementById('profileLevel').textContent = level.emoji + ' ' + level.name;
+  document.getElementById('profileAvatar').textContent = (profile.firstName?.[0] || '🌿') + (profile.lastName?.[0] || '');
+
+  document.getElementById('pStatScore').textContent = data.score || '—';
+  document.getElementById('pStatPoints').textContent = points;
+  document.getElementById('pStatCO2').textContent = data.total || '—';
+
+  // Fill form
+  if (profile.firstName) document.getElementById('pFirstName').value = profile.firstName;
+  if (profile.lastName) document.getElementById('pLastName').value = profile.lastName;
+  if (profile.email) document.getElementById('pEmail').value = profile.email;
+  if (profile.city) document.getElementById('pCity').value = profile.city;
+
+  // Achievements
+  const unlocked = ACHIEVEMENTS.filter(a => a.condition(completed));
+  document.getElementById('profileAchievements').innerHTML = unlocked.length > 0
+    ? unlocked.map(a => `<div class="badge badge-amber">${a.emoji} ${a.name}</div>`).join('')
+    : '<p style="color:var(--text-muted);font-size:0.83rem;">Complete challenges to earn achievements!</p>';
+
+  // Saved data
+  document.getElementById('profileSavedData').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <div class="breakdown-item"><div class="breakdown-label">🌿 Eco Score</div><div class="breakdown-value">${data.score || 'N/A'}</div></div>
+      <div class="breakdown-item"><div class="breakdown-label">💨 CO₂/month</div><div class="breakdown-value">${data.total || 'N/A'} kg</div></div>
+      <div class="breakdown-item"><div class="breakdown-label">⚡ Eco Points</div><div class="breakdown-value">${points}</div></div>
+      <div class="breakdown-item"><div class="breakdown-label">✅ Challenges</div><div class="breakdown-value">${completed.length}</div></div>
+    </div>
+  `;
+}
+
+function saveProfile() {
+  const profile = {
+    firstName: document.getElementById('pFirstName').value,
+    lastName: document.getElementById('pLastName').value,
+    email: document.getElementById('pEmail').value,
+    city: document.getElementById('pCity').value,
+    goal: document.getElementById('pGoal').value,
+  };
+  LS.set('profile', profile);
+  showToast('Profile saved successfully! 🌿', 'success');
+  initProfile();
+}
+
+function clearAllData() {
+  if (!confirm('Clear ALL saved data? This cannot be undone.')) return;
+  ['calcData','points','completedChallenges','profile'].forEach(k => LS.del(k));
+  showToast('All data cleared.', 'info');
+  initProfile();
+}
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+function switchAuthTab(tab) {
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value;
+  if (!email) { showToast('Please enter your email', 'error'); return; }
+  LS.set('profile', { ...(LS.get('profile')||{}), email });
+  showToast('Welcome back! Redirecting to dashboard…', 'success');
+  setTimeout(() => navigate('dashboard'), 1200);
+}
+
+function handleSignup() {
+  const first = document.getElementById('signupFirst').value;
+  const last = document.getElementById('signupLast').value;
+  const email = document.getElementById('signupEmail').value;
+  if (!first || !email) { showToast('Please fill required fields', 'error'); return; }
+  LS.set('profile', { firstName: first, lastName: last, email });
+  showToast('Account created! Welcome to EcoSmart AI 🌿', 'success');
+  setTimeout(() => navigate('calculator'), 1200);
+}
+
+function socialLogin(provider) {
+  showToast(`${provider} login simulated — redirecting…`, 'info');
+  setTimeout(() => navigate('dashboard'), 1200);
+}
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+window.addEventListener('load', () => {
+  createParticles();
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hide');
+    setTimeout(() => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      animateCounters();
+      // Trigger initial reveals
+      document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible');
+      });
+    }, 500);
+  }, 1800);
+});
+
+// Float emoji animation
+const style = document.createElement('style');
+style.textContent = `@keyframes float-emoji{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
